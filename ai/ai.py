@@ -11,54 +11,58 @@ import select
 import socket
 import sys
 
-def connect_to_server(argv):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    if(len(argv) == 3):
-        server_address = ('localhost', int(argv[2]))
-    else:
-        server_address = (str(argv[4]), int(argv[2]))
-    sock.connect(server_address)
-    return sock
 
-def send_command_to_server(sock):
-    cmd = input()
-    sock.sendall(cmd.encode())
+class MyClient():
+    def __init__(self, argv):
+        self.port = int(argv[2])
+        self.ip = 'localhost'
+        if (len(argv) == 5):
+            self.ip = str(argv[4])
 
-def receive_data_from_server(sock):
-    data = sock.recv(1024)
-    print(data.decode(), end="")
-    return data.decode()
+    def connect_to_server(self):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_address = (self.ip, self.port)
+        self.sock.connect(server_address)
+
+    def send_command_to_server(self):
+        self.cmd = sys.stdin.readline()
+        self.sock.sendall(self.cmd.encode())
+
+    def receive_data_from_server(self):
+        self.data = self.sock.recv(1024)
+        print(self.data.decode(), end="")
+
+    def handle_data(self):
+        self.fdmax = self.sock.fileno()
+        if sys.stdin.fileno() > self.fdmax:
+            self.fdmax = sys.stdin.fileno()
+        while True:
+            readfds = []
+            readfds.append(self.sock)
+            readfds.append(sys.stdin)
+
+            r, w, x = select.select(readfds, [], [])
+
+            for descriptor in r:
+                if descriptor == sys.stdin:
+                    self.send_command_to_server()
+                else:
+                    self.receive_data_from_server()
+            if self.data.decode() == "WELCOME\n":
+               getWelcome()
 
 def getWelcome():
     print("Is Welcomed")
 
-def handle_data(sock):
-    fdmax = sock.fileno()
-    if sys.stdin.fileno() > fdmax:
-        fdmax = sys.stdin.fileno()
-    while True:
-        readfds = []
-        readfds.append(sock)
-        readfds.append(sys.stdin)
-
-        r, w, x = select.select(readfds, [], [])
-
-        for descriptor in r:
-            if descriptor == sys.stdin:
-                send_command_to_server(sock)
-            else:
-                data = receive_data_from_server(sock)
-        if data == "WELCOME\n":
-            getWelcome()
-
 def main():
     if (len(sys.argv) == 3) or (len(sys.argv) == 5):
         try:
-            sock = connect_to_server(sys.argv)
+            client = MyClient(sys.argv)
         except:
             exit(84)
-        handle_data(sock)
-        sock.close()
+        client.connect_to_server()
+        client.handle_data()
+        client.sock.close()
         return (0)
     else:
         exit (84)
