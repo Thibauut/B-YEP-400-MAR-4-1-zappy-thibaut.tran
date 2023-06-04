@@ -1,0 +1,21 @@
+commands
+
+a player can't execute a command without being in a team
+name1
+
+commands:       actions:                        outputs:
+Forward         move up one tile                ok
+Right           turn 90degrees right            ok
+Left            turn 90degrees left             ok
+
+Look            look around                     [tile1, tile2, ...]
+Inventory       inventory                       [linemate n, sibur n, ...]
+Broadcast       broadcast text                  ok
+
+Connect_nbr     number of team unused slots     value
+Fork            fork a player                   ok
+Eject           eject players from this tile    ok/ko
+(time_out)      death of a player               dead
+Take_object     take object                     ok/ko
+Set_object      set object down                 ok/ko
+Incantation     start incantation               Elevation underway Current level: k /ko
