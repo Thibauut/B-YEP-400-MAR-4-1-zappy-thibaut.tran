@@ -28,6 +28,7 @@
 #include <uuid/uuid.h>
 #include <dlfcn.h>
 #include <time.h>
+#include "map.h"
 
 typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
@@ -49,6 +50,7 @@ typedef struct list_teams_s {
 //PLAYER
 typedef struct player_s {
     bool in_team;
+    bool is_gui;
     int socket;
     team_t *team;
 
@@ -88,7 +90,12 @@ typedef struct this_s {
     fd_set readfds;
     fd_set tmpfds;
     fd_set writefds;
+
     struct timeval timeout;
+    time_t start_time;
+
+    //MAP
+    map_t *map;
 
 } this_t;
 
@@ -124,9 +131,14 @@ void get_nb_clients(this_t *this, char *nb_clients);
 void get_freq(this_t *this, char *freq);
 void get_params(this_t *this, int ac, char **av);
 
+//MAP
+void init_zappy_map(this_t *this);
+void refill_map(this_t *this);
+
 //SERVER
 void init_server(this_t *this);
 void run_server(this_t *this);
+int add_player_to_team(this_t *this, player_t *player);
 
 //ERRORS
 void socket_error(int control_socket);
@@ -135,6 +147,17 @@ void bind_error(int _bind);
 void listen_error(int _listen);
 void select_error(int _activity);
 
-//COMMANDS
+//COMMANDS (SERVER)
 void commands(this_t *this, player_t *player);
-int exec_commands(this_t *this, player_t *player);
+int exec_ai_commands(this_t *this, player_t *player);
+int exec_gui_commands(this_t *this, player_t *player);
+int move_commands(this_t *this, player_t *player);
+int action_commands(this_t *this, player_t *player);
+int player_commands(this_t *this, player_t *player);
+
+//COMMANDS (GUI)
+int map_info_gui_commands(this_t *this, player_t *player);
+int player_info_gui_commands(this_t *this, player_t *player);
+int time_info_gui_commands(this_t *this, player_t *player);
+
+void msz(this_t *this, player_t *player);

@@ -10,6 +10,8 @@
 int main(int ac, char **av)
 {
     this_t *this = malloc(sizeof(this_t));
+    srand(time(NULL));
+    this->start_time = time(NULL);
 
     if (ac > 11) {
         if (my_strcmp(av[1], "-help") == 0){

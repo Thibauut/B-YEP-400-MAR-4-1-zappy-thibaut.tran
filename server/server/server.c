@@ -110,6 +110,12 @@ void server_loop(this_t *this)
     printf("Server running on port: %d\n", this->port);
     while (1) {
         this->tmpfds = this->readfds;
+        time_t current_time = time(NULL);
+        if (current_time - this->start_time >= (20 * this->freq)) {
+            refill_map(this);
+            this->start_time = current_time;
+        }
+
         add_player_to_set(this);
         _activity = select(this->maxfd + 1, &this->tmpfds, NULL, NULL, &(this->timeout));
         select_error(_activity);
@@ -129,9 +135,6 @@ void init_zappy_teams(this_t *this)
         newteam->players_id = NULL;
         this->teams = add_element_team(this->teams, newteam, list_len_team(this->teams));
     }
-    list_teams_t *tmp = this->teams;
-    for (; tmp != NULL; tmp = tmp->next)
-        printf("Team \"%s\": [%d/%d]\n", tmp->team->name, tmp->team->nb_players, tmp->team->max_players);
 }
 
 void run_server(this_t *this)
@@ -139,6 +142,7 @@ void run_server(this_t *this)
     init_socket(this);
     init_fdset(this);
     init_zappy_teams(this);
+    init_zappy_map(this);
     server_loop(this);
 }
 

@@ -12,7 +12,12 @@ SRC	=	utils/utils.c				\
 		server/get_params.c			\
 		server/error.c				\
 		server/server.c				\
-		server/commands.c			\
+		server/commands_ai.c		\
+		server/commands_gui.c		\
+		server/handle_cmd.c			\
+		server/handle_player.c		\
+		server/map.c				\
+		server/commands_gui/msz.c	\
 		main.c
 
 OBJ	=	$(SRC:.c=.o)

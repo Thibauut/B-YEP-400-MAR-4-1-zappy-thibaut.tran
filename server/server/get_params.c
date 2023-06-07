@@ -22,12 +22,12 @@ void error_params(char**av, int i, int max_args, char *option, bool enable_max_a
     int index = 0;
     for (; av[i + 1] != NULL && av[i + 1][0] != '-'; i += 1, index += 1) {
         if (index >= max_args && enable_max_args == true) {
-            printf("Error: Too many arguments for %s option.\n", option);
+            printf("too many arguments for %s option.\n", option);
             exit(84);
         }
     }
     if (index == 0) {
-        printf("Error: Missing value for %s option.\n", option);
+        printf("missing value for %s option.\n", option);
         exit(84);
     }
 }
@@ -35,12 +35,12 @@ void error_params(char**av, int i, int max_args, char *option, bool enable_max_a
 void get_port(this_t *this, char *port)
 {
     if (my_is_number(port) == 1) {
-        printf("Error: Invalid port \'%s\'\n", port);
+        printf("-p invalid port \'%s\'\n", port);
         exit(84);
     }
     this->port = atoi(port);
     if (this->port < 0 || this->port > 65535) {
-        printf("Error: Invalid port \'%d'\n", this->port);
+        printf("-p invalid port \'%d'\n", this->port);
         exit(84);
     }
 }
@@ -48,12 +48,12 @@ void get_port(this_t *this, char *port)
 void get_width(this_t *this, char *width)
 {
     if (my_is_number(width) == 1) {
-        printf("Error: Invalid width \'%s\'\n", width);
+        printf("-x invalid width \'%s\'\n", width);
         exit(84);
     }
     this->width = atoi(width);
-    if (this->width < 10) {
-        printf("Error: Invalid width \'%d\'\n", this->width);
+    if (this->width < 10 || this->width > 30) {
+        printf("-x option only accepts integer values between 10 and 30\n");
         exit(84);
     }
 }
@@ -61,12 +61,12 @@ void get_width(this_t *this, char *width)
 void get_height(this_t *this, char *height)
 {
     if (my_is_number(height) == 1) {
-        printf("Error: Invalid height \'%s\'\n", height);
+        printf("-y invalid height \'%s\'\n", height);
         exit(84);
     }
     this->height = atoi(height);
-    if (this->height < 10) {
-        printf("Error: Invalid height \'%d\'\n", this->height);
+    if (this->height < 10 || this->height > 30) {
+        printf("-y option only accepts integer values between 10 and 30\n", this->height);
         exit(84);
     }
 }
@@ -83,12 +83,12 @@ void get_teams(this_t *this, char **av, int i)
 void get_nb_clients(this_t *this, char *nb_clients)
 {
     if (my_is_number(nb_clients) == 1) {
-        printf("Error: Invalid nb_clients \'%s\'\n", nb_clients);
+        printf("-c invalid nb_clients \'%s\'\n", nb_clients);
         exit(84);
     }
     this->nb_clients = atoi(nb_clients);
     if (this->nb_clients < 1) {
-        printf("Error: Invalid nb_clients \'%d\'\n", this->nb_clients);
+        printf("-c invalid nb_clients \'%d\'\n", this->nb_clients);
         exit(84);
     }
 }
@@ -96,12 +96,12 @@ void get_nb_clients(this_t *this, char *nb_clients)
 void get_freq(this_t *this, char *freq)
 {
     if (my_is_number(freq) == 1) {
-        printf("Error: Invalid freq \'%s\'\n", freq);
+        printf("-f invalid frequence \'%s\'\n", freq);
         exit(84);
     }
     this->freq = atoi(freq);
     if (this->freq < 2 || this->freq > 10000) {
-        printf("Error: Invalid freq \'%d\'\n", this->freq);
+        printf("-f option only accepts integer values between 2 and 10000\n");
         exit(84);
     }
     this->timeout.tv_usec = 1 / this->freq;

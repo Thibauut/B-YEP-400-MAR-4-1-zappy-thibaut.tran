@@ -17,6 +17,8 @@ list_players_t *create_cell(player_t *player)
     cell->player->in_team = player->in_team;
     cell->player->socket = player->socket;
     cell->player->team = player->team;
+    cell->player->is_gui = player->is_gui;
+    cell->player->incentation = player->incentation;
     cell->next = NULL;
     return (cell);
 }
