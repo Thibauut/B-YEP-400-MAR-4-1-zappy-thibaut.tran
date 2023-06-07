@@ -8,20 +8,19 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 #include <GL/glut.h>
-#include "Requests/Client.hpp"
+#include "requests/Client.hpp"
 #include "Utils/Global.hpp"
+#include "../dependencies/json.hpp"
+
+using json = nlohmann::json;
 
 float cameraX = 0.0f;  // Position de la caméra sur l'axe X
-float cameraY = 0.0f;  // Position de la caméra sur l'axe Y
+float cameraY = 3.0f;  // Position de la caméra sur l'axe Y
 float cameraZ = 0.0f;  // Position de la caméra sur l'axe Z
 
-void renderScene() {
-    Client client(ip, port);
-    client.sendRequest("msz\n");
-    std::string response = client.catchResponse();
-    std::cout << "response: " << response << std::endl;
+void renderScene()
+{
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -31,21 +30,20 @@ void renderScene() {
 
     glColor3f(1.0, 1.0, 1.0);  // Couleur des lignes
 
-    glTranslatef(-200.0, 0.0, -200.0);  // Déplacer le quadrillage au centre
-
+    glTranslatef((((width_map * 10) / 2) * (-1)), 0.0, (((height_map * 10) / 2) * (-1)));  // Déplacer le quadrillage au centre
     // Dessiner les lignes horizontales du quadrillage
-    for (int i = 0; i <= 400; i += 10) {
+    for (int i = 0; i <= width_map * 10; i += 10) {
         glBegin(GL_LINES);
         glVertex3f(0, 0, i);
-        glVertex3f(400, 0, i);
+        glVertex3f(width_map * 10, 0, i);
         glEnd();
     }
 
     // Dessiner les lignes verticales du quadrillage
-    for (int i = 0; i <= 400; i += 10) {
+    for (int i = 0; i <= height_map * 10; i += 10) {
         glBegin(GL_LINES);
         glVertex3f(i, 0, 0);
-        glVertex3f(i, 0, 400);
+        glVertex3f(i, 0, height_map * 10);
         glEnd();
     }
 
@@ -89,7 +87,20 @@ void checkArguments(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
+    // init
     checkArguments(argc, argv);
+    Client client(ip, port);
+    std::string response = client.catchResponse();
+    std::cout << "response: " << response << std::endl;
+    client.sendRequest("GUI\n");
+    client.sendRequest("msz\n");
+    std::cout << "Send msz command to server..." << std::endl;
+    response = client.catchResponse();
+    json parsedData = json::parse(response);
+    width_map = parsedData["x"];
+    height_map = parsedData["y"];
+    std::cout << "x: " << width_map << ", y: " << height_map << std::endl;
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(800, 800);

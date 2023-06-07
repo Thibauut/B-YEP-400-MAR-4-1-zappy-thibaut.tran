@@ -11,3 +11,4 @@
 
 int port;
 std::string ip;
+int width_map, height_map;

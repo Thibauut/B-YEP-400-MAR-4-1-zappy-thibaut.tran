@@ -28,6 +28,10 @@ Client::Client(const std::string& ip, int port) {
         std::cerr << "Erreur lors de la connexion au serveur." << std::endl;
         exit(1);
     }
+
+    // Configuration du socket en mode non-bloquant
+    int flags = fcntl(socketId, F_GETFL, 0);
+    fcntl(socketId, F_SETFL, flags | O_NONBLOCK);
 }
 
 Client::~Client() {
@@ -44,12 +48,31 @@ void Client::sendRequest(const std::string& commande) {
 }
 
 std::string Client::catchResponse() {
-    // Réception de la réponse du serveur
-    char buffer[1024] = {0};
-    if (recv(socketId, buffer, sizeof(buffer), 0) < 0) {
-        std::cerr << "Erreur lors de la réception de la réponse." << std::endl;
+    // Attente de la réponse du serveur avec select
+    fd_set readSet;
+    FD_ZERO(&readSet);
+    FD_SET(socketId, &readSet);
+
+    struct timeval timeout;
+    timeout.tv_sec = 5; // Temps d'attente en secondes
+    timeout.tv_usec = 0;
+
+    if (select(socketId + 1, &readSet, NULL, NULL, &timeout) < 0) {
+        std::cerr << "Erreur lors de l'attente de la réponse." << std::endl;
         exit(1);
     }
 
-    return std::string(buffer);
+    if (FD_ISSET(socketId, &readSet)) {
+        // Réception de la réponse du serveur
+        char buffer[1024] = {0};
+        if (recv(socketId, buffer, sizeof(buffer), 0) < 0) {
+            std::cerr << "Erreur lors de la réception de la réponse." << std::endl;
+            exit(1);
+        }
+
+        return std::string(buffer);
+    } else {
+        // Timeout atteint, aucune réponse reçue
+        return "";
+    }
 }
