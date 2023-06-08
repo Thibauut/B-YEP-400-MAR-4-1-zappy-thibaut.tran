@@ -35,7 +35,7 @@ NAME_AI		=	zappy_ai
 
 NAME_SERVER	=	zappy_server
 
-all: GUI_ AI_ SERVER_
+all: gui_ ai_ server_
 
 clean:
 	@rm -f *.o
@@ -45,14 +45,14 @@ fclean: clean
 	@rm -f $(NAME_AI)
 	@rm -f $(NAME_SERVER)
 
-AI_:
+ai_:
 	@cp -r $(SRC_AI) $(NAME_AI)
 	@chmod 777 $(NAME_AI)
 
-SERVER_:
+server_:
 	@gcc	-o $(NAME_SERVER) $(SRC_SERVER) -g3 -std=gnu17	-luuid
 
-GUI_:
-	@# g++ -o $(NAME_GUI) $(SRC_GUI) -std=c++11 -Wall -lGL -lGLU -lglut -lGLEW -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system
+gui_:
+	@g++	-o $(NAME_GUI) $(SRC_GUI) -std=c++11 -Wall -lGL -lGLU -lglut -lGLEW -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system
 
 re: fclean all
