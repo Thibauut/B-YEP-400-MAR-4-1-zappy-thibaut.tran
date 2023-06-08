@@ -9,5 +9,9 @@
 
 void msz(this_t *this, player_t *player)
 {
+    if (this->cmd[1] != NULL) {
+        dprintf(player->socket, "ko\n");
+        return;
+    }
     dprintf(player->socket, "{\n\t\"x\": %d,\n\t\"y\": %d\n}\n", this->width, this->height);
 }

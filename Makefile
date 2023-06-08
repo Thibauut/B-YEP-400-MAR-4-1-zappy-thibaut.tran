@@ -9,9 +9,25 @@ SRC_GUI		=	gui/SFML/SFML.cpp			\
 				gui/gui.cpp					\
 				gui/requests/Client.cpp	\
 
-SRC_AI 		=	AI/ai.py
+SRC_AI 		=	ai/ai.py
 
-SRC_SERVER	=	server/zappy_server
+SRC_SERVER	=	server/utils/utils.c				\
+				server/utils/player_list_utils.c	\
+				server/utils/team_list_utils.c		\
+				server/server/display_help.c		\
+				server/server/get_params.c			\
+				server/server/error.c				\
+				server/server/server.c				\
+				server/server/commands_ai.c			\
+				server/server/commands_gui.c		\
+				server/server/handle_cmd.c			\
+				server/server/handle_player.c		\
+				server/server/map.c					\
+				server/server/commands_gui/msz.c	\
+				server/server/commands_gui/bct.c	\
+				server/server/commands_gui/mct.c	\
+				server/server/commands_gui/tna.c	\
+				server/main.c
 
 NAME_GUI	=	zappy_gui
 
@@ -19,25 +35,24 @@ NAME_AI		=	zappy_ai
 
 NAME_SERVER	=	zappy_server
 
-all: GUI ai SERVER
+all: GUI_ AI_ SERVER_
 
 clean:
-		rm -f *.o
+	@rm -f *.o
 
 fclean: clean
-		rm -f $(NAME_GUI)
-		rm -f $(NAME_AI)
-		rm -f $(NAME_SERVER)
+	@rm -f $(NAME_GUI)
+	@rm -f $(NAME_AI)
+	@rm -f $(NAME_SERVER)
 
-ai:
-	cp -r $(SRC_AI) $(NAME_AI)
-	chmod 777 $(NAME_AI)
+AI_:
+	@cp -r $(SRC_AI) $(NAME_AI)
+	@chmod 777 $(NAME_AI)
 
-SERVER:
-	cp -r $(SRC_SERVER) $(NAME_SERVER)
-	chmod 777 $(NAME_SERVER)
+SERVER_:
+	@gcc	-o $(NAME_SERVER) $(SRC_SERVER) -g3 -std=gnu17	-luuid
 
-GUI:
-	g++ -o $(NAME_GUI) $(SRC_GUI) -std=c++11 -Wall -lGL -lGLU -lglut -lGLEW -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system
+GUI_:
+	@# g++ -o $(NAME_GUI) $(SRC_GUI) -std=c++11 -Wall -lGL -lGLU -lglut -lGLEW -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system
 
 re: fclean all

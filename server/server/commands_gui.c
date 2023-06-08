@@ -14,15 +14,15 @@ int map_info_gui_commands(this_t *this, player_t *player)
         return 0;
     }
     if (my_strcmp(this->cmd[0], "bct") == 0) {
-        // dprintf(player->socket, "bct %d %d %d %d %d %d %d %d %d\n", this->cmd[1], this->cmd[2], this->map[this->cmd[1]][this->cmd[2]].food, this->map[this->cmd[1]][this->cmd[2]].linemate, this->map[this->cmd[1]][this->cmd[2]].deraumere, this->map[this->cmd[1]][this->cmd[2]].sibur, this->map[this->cmd[1]][this->cmd[2]].mendiane, this->map[this->cmd[1]][this->cmd[2]].phiras, this->map[this->cmd[1]][this->cmd[2]].thystame);
+        bct(this, player);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "mct") == 0) {
-        // dprintf(player->socket, "mct\n");
+        mct(this, player);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "tna") == 0) {
-        // dprintf(player->socket, "tna\n");
+        tna(this, player);
         return 0;
     }
     return 1;

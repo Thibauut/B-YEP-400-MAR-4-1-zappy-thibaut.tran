@@ -161,3 +161,6 @@ int player_info_gui_commands(this_t *this, player_t *player);
 int time_info_gui_commands(this_t *this, player_t *player);
 
 void msz(this_t *this, player_t *player);
+void bct(this_t *this, player_t *player);
+void mct(this_t *this, player_t *player);
+void tna(this_t *this, player_t *player);

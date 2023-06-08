@@ -18,6 +18,9 @@ SRC	=	utils/utils.c				\
 		server/handle_player.c		\
 		server/map.c				\
 		server/commands_gui/msz.c	\
+		server/commands_gui/bct.c	\
+		server/commands_gui/mct.c	\
+		server/commands_gui/tna.c	\
 		main.c
 
 OBJ	=	$(SRC:.c=.o)

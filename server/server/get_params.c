@@ -66,7 +66,7 @@ void get_height(this_t *this, char *height)
     }
     this->height = atoi(height);
     if (this->height < 10 || this->height > 30) {
-        printf("-y option only accepts integer values between 10 and 30\n", this->height);
+        printf("-y option only accepts integer values between 10 and 30\n");
         exit(84);
     }
 }
