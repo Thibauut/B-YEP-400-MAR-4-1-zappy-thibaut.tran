@@ -47,7 +47,24 @@ typedef struct list_teams_s {
     struct list_teams_s *next;
 } list_teams_t;
 
+enum orientation_e {
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
+};
+
 //PLAYER
+typedef struct inventory_s {
+    int food;
+    int linemate;
+    int deraumere;
+    int sibur;
+    int mendiane;
+    int phiras;
+    int thystame;
+} inventory_t;
+
 typedef struct player_s {
     bool in_team;
     bool is_gui;
@@ -55,8 +72,13 @@ typedef struct player_s {
     team_t *team;
 
     //INFO
+    inventory_t *inventory;
     char *id;
     int level;
+    int x;
+    int y;
+   enum orientation_e o;
+
     bool incentation;
 } player_t;
 
@@ -64,6 +86,19 @@ typedef struct list_players_s {
     player_t *player;
     struct list_players_s *next;
 } list_players_t;
+
+//COMMAND AI
+typedef struct cmd_ai_s {
+    char *uuid;
+    char *cmd;
+    float time_exec;
+    float current_time;
+} cmd_ai_t;
+
+typedef struct list_cmd_ai_s {
+    cmd_ai_t *action;
+    struct list_cmd_ai_s *next;
+} list_cmd_ai_t;
 
 
 //SERVER
@@ -87,12 +122,20 @@ typedef struct this_s {
     SOCKADDR_IN client_addr;
     char **cmd;
 
+    //SELECT
+    list_cmd_ai_t *actions;
+
     fd_set readfds;
     fd_set tmpfds;
     fd_set writefds;
 
-    struct timeval timeout;
+    struct timeval *timeout;
+    time_t current_time;
+    time_t refill_map_timer;
     time_t start_time;
+
+    int curr_time;
+
 
     //MAP
     map_t *map;
@@ -111,6 +154,7 @@ char **word_to_tab(char *str, char c, int i);
 char *my_itoa(int nb);
 void display_help(void);
 char *get_unique_uuid(void);
+struct timeval float_to_timeval(float seconds);
 
 list_players_t *create_cell(player_t *player);
 list_players_t *add_element(list_players_t *list, player_t *player, int pos);
@@ -120,6 +164,12 @@ list_teams_t *create_cell_team(team_t *team);
 list_teams_t *add_element_team(list_teams_t *list, team_t *team, int pos);
 list_teams_t *free_element_at_team(list_teams_t *list, int pos);
 int list_len_team(list_teams_t *list);
+
+list_cmd_ai_t *create_cell_ai(cmd_ai_t *cmd);
+list_cmd_ai_t *add_element_ai(list_cmd_ai_t *list, cmd_ai_t *cmd, int pos);
+list_cmd_ai_t *free_first_element_ai(list_cmd_ai_t *list);
+list_cmd_ai_t *free_element_at_ai(list_cmd_ai_t *list, int pos);
+int list_len_ai(list_cmd_ai_t *list);
 
 //PARAMS
 void init_params(this_t *this);
@@ -139,6 +189,8 @@ void refill_map(this_t *this);
 void init_server(this_t *this);
 void run_server(this_t *this);
 int add_player_to_team(this_t *this, player_t *player);
+void add_player_to_set(this_t *this);
+void handle_new_connection(this_t *this);
 
 //ERRORS
 void socket_error(int control_socket);
@@ -164,3 +216,10 @@ void msz(this_t *this, player_t *player);
 void bct(this_t *this, player_t *player);
 void mct(this_t *this, player_t *player);
 void tna(this_t *this, player_t *player);
+void ppo(this_t *this, player_t *player);
+void plv(this_t *this, player_t *player);
+void pin(this_t *this, player_t *player);
+void sgt(this_t *this, player_t *player);
+void sst(this_t *this, player_t *player);
+
+//COMMANDS (AI)

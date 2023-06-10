@@ -24,9 +24,9 @@ They have different levels.
 ## Build
 
 ```
-make gui
-make ai
-make server
+make gui_
+make ai_
+make server_
 
 make
 make re

@@ -28,56 +28,6 @@ void init_fdset(this_t *this)
     FD_SET(this->control_socket, &this->readfds);
 }
 
-void add_player_to_set(this_t *this)
-{
-    list_players_t *tmp = this->players;
-    for (; tmp != NULL; tmp = tmp->next) {
-        if (tmp->player->socket > 0) {
-            FD_SET(tmp->player->socket, &this->tmpfds);
-            (tmp->player->socket > this->maxfd) ?
-                this->maxfd = tmp->player->socket : 0;
-        }
-    }
-}
-
-void new_player(this_t *this)
-{
-    list_players_t *tmp = this->players;
-    for (int i = 0; tmp != NULL; i++, tmp = tmp->next) {
-        if (tmp->player->socket == 0) {
-            tmp->player->socket = this->new_socket;
-            break;
-        }
-    }
-}
-
-player_t *create_player(this_t *this)
-{
-    player_t *newplayer = malloc(sizeof(player_t));
-    newplayer->id = get_unique_uuid();
-    newplayer->in_team = false;
-    newplayer->socket = 0;
-    newplayer->team = NULL;
-    return (newplayer);
-}
-
-void handle_new_connection(this_t *this)
-{
-    if (FD_ISSET(this->control_socket, &this->tmpfds)) {
-        socklen_t client_addr_len = sizeof(this->client_addr);
-        if ((this->new_socket = accept(this->control_socket, (struct sockaddr *)&this->client_addr, &client_addr_len)) < 0) {
-            perror("accept failed");
-            exit(84);
-        }
-        player_t *newplayer = create_player(this);
-        printf("New connection id: %s\n", newplayer->id);
-        dprintf(this->new_socket, "Welcome to our Zappy server!\n");
-
-        this->players = add_element(this->players, newplayer, 0);
-        new_player(this);
-    }
-}
-
 void read_data(this_t *this, player_t *player, int i)
 {
     int readValue = 0;
@@ -108,19 +58,60 @@ void server_loop(this_t *this)
     int _activity;
     this->maxfd = this->control_socket;
     printf("Server running on port: %d\n", this->port);
+
+    this->actions = NULL;
+    this->timeout = NULL;
+
+    this->start_time = time(NULL);
+    this->curr_time = 0;
     while (1) {
         this->tmpfds = this->readfds;
-        time_t current_time = time(NULL);
-        if (current_time - this->start_time >= (20 * this->freq)) {
+        this->current_time = time(NULL);
+
+        if (this->current_time - this->refill_map_timer >= (20 * this->freq)) {
+            printf("Refill map\n");
             refill_map(this);
-            this->start_time = current_time;
+            this->refill_map_timer = this->current_time;
         }
+        // if (this->current_time - this->start_time >= 1 && this->actions != NULL) {
+        //     this->start_time = this->current_time;
+        //     this->curr_time += 1;
+        //     printf("this->curr_time: %d\n", this->curr_time);
+        // }
 
         add_player_to_set(this);
-        _activity = select(this->maxfd + 1, &this->tmpfds, NULL, NULL, &(this->timeout));
+        _activity = select(this->maxfd + 1, &this->tmpfds, NULL, NULL, this->timeout);
         select_error(_activity);
         handle_new_connection(this);
         data_from_player(this);
+
+
+
+
+
+        if (_activity == 0) {
+            // printf("Dead\n");
+            // list_cmd_ai_t *tmp_action = this->actions;
+            // list_players_t *tmp_player = this->players;
+
+            // if (tmp_action == NULL)
+            //     this->timeout = NULL;
+            // else {
+            //     // for (; tmp_action != NULL; tmp_action = tmp_action->next) {
+            //     //     for (int i = 0; tmp_player != NULL; tmp_player = tmp_player->next, i += 1) {
+            //     //         if (my_strcmp(tmp_player->player->id, tmp_action->action->uuid)) {
+            //     //             this->players = free_element_at(this->players, i);
+            //     //             close(tmp_player->player->socket);
+            //     //             break;
+            //     //         }
+            //     //     }
+            //     // }
+            //     if (tmp_action != NULL) {
+            //         tmp_action = free_element_at_ai(tmp_action, 0);
+            //         this->timeout->tv_sec = tmp_action->action->time_exec;
+            //     }
+            // }
+        }
     }
 }
 

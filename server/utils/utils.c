@@ -152,3 +152,12 @@ char *get_unique_uuid(void)
     uuid_unparse_upper(binuuid, uuid);
     return (uuid);
 }
+
+struct timeval float_to_timeval(float seconds)
+{
+    struct timeval tv;
+    long int microseconds = seconds * 1000000;
+    tv.tv_sec = microseconds / 1000000;
+    tv.tv_usec = microseconds % 1000000;
+    return tv;
+}

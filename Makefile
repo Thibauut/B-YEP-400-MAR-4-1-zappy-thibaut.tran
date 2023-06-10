@@ -14,6 +14,7 @@ SRC_AI 		=	ai/ai.py
 SRC_SERVER	=	server/utils/utils.c				\
 				server/utils/player_list_utils.c	\
 				server/utils/team_list_utils.c		\
+				server/utils/ai_cmd_list_utils.c	\
 				server/server/display_help.c		\
 				server/server/get_params.c			\
 				server/server/error.c				\
@@ -22,11 +23,17 @@ SRC_SERVER	=	server/utils/utils.c				\
 				server/server/commands_gui.c		\
 				server/server/handle_cmd.c			\
 				server/server/handle_player.c		\
+				server/server/handle_connection.c	\
 				server/server/map.c					\
 				server/server/commands_gui/msz.c	\
 				server/server/commands_gui/bct.c	\
 				server/server/commands_gui/mct.c	\
 				server/server/commands_gui/tna.c	\
+				server/server/commands_gui/ppo.c	\
+				server/server/commands_gui/plv.c	\
+				server/server/commands_gui/pin.c	\
+				server/server/commands_gui/sgt.c	\
+				server/server/commands_gui/sst.c	\
 				server/main.c
 
 NAME_GUI	=	zappy_gui

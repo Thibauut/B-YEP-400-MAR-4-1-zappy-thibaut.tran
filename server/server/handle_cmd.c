@@ -9,18 +9,39 @@
 
 int exec_ai_commands(this_t *this, player_t *player)
 {
+    list_cmd_ai_t *tmp = NULL;
+    this->timeout = malloc(sizeof(struct timeval));
     if ((add_player_to_team(this, player) == 0) && player->is_gui == false) {
         player->in_team = true;
-        return 0;
+        tmp = this->actions;
     }
-    if (player->in_team == true && player->is_gui == false) {
-        if (move_commands(this, player) == 0)
-            return 0;
-        if (action_commands(this, player) == 0)
-            return 0;
-        if (player_commands(this, player) == 0)
-            return 0;
+    if (tmp != NULL) {
+        this->timeout->tv_sec = tmp->action->time_exec;
+        this->timeout->tv_usec = 0;
     }
+
+
+
+
+
+    // if (tmp != NULL && tmp->next == NULL) {
+    //     this->timeout->tv_sec = tmp->action->time_exec - this->curr_time;
+    //     this->timeout->tv_usec = 0;
+    //     tmp = tmp->next;
+    // }
+    // printf("time while connect: %ld\n", this->timeout->tv_sec);
+
+
+    // if (player->in_team == true && player->is_gui == false) {
+    //     printf("cmd: %s\n", this->cmd[0]);
+    //     // if (move_commands(this, player) == 0)
+    //     //     return 0;
+    //     // if (action_commands(this, player) == 0)
+    //     //     return 0;
+    //     // if (player_commands(this, player) == 0)
+    //     //     return 0;
+    // }
+    // return 0;
     return 1;
 }
 

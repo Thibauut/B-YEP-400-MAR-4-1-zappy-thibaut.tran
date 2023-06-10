@@ -14,7 +14,6 @@ void init_params(this_t *this)
     this->height = 0;
     this->nb_clients = 0;
     this->freq = 0;
-    this->timeout.tv_sec = 0;
 }
 
 void error_params(char**av, int i, int max_args, char *option, bool enable_max_args)
@@ -104,7 +103,6 @@ void get_freq(this_t *this, char *freq)
         printf("-f option only accepts integer values between 2 and 10000\n");
         exit(84);
     }
-    this->timeout.tv_usec = 1 / this->freq;
 }
 
 void get_params(this_t *this, int ac, char **av)

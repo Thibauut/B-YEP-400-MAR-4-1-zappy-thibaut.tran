@@ -31,15 +31,15 @@ int map_info_gui_commands(this_t *this, player_t *player)
 int player_info_gui_commands(this_t *this, player_t *player)
 {
     if (my_strcmp(this->cmd[0], "ppo") == 0) {
-        // dprintf(player->socket, "ppo\n");
+        ppo(this, player);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "plv") == 0) {
-        // dprintf(player->socket, "plv\n");
+        plv(this, player);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "pin") == 0) {
-        // dprintf(player->socket, "pin\n");
+        pin(this, player);
         return 0;
     }
     return 1;
@@ -48,11 +48,11 @@ int player_info_gui_commands(this_t *this, player_t *player)
 int time_info_gui_commands(this_t *this, player_t *player)
 {
     if (my_strcmp(this->cmd[0], "sgt") == 0) {
-        // dprintf(player->socket, "sgt\n");
+        sgt(this, player);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "sst") == 0) {
-        // dprintf(player->socket, "sst\n");
+        sst(this, player);
         return 0;
     }
     return 1;
