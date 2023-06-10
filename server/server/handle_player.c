@@ -45,6 +45,7 @@ int add_player_to_team(this_t *this, player_t *player)
 
             dprintf(player->socket, "%d\n", tmp->team->max_players - tmp->team->nb_players);
             dprintf(player->socket, "%d %d\n", this->width, this->height);
+            pnw(this, player);
             return 0;
         }
     }

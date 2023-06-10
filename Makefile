@@ -32,6 +32,7 @@ SRC_SERVER	=	server/utils/utils.c				\
 				server/server/commands_gui/ppo.c	\
 				server/server/commands_gui/plv.c	\
 				server/server/commands_gui/pin.c	\
+				server/server/commands_gui/pnw.c	\
 				server/server/commands_gui/sgt.c	\
 				server/server/commands_gui/sst.c	\
 				server/main.c

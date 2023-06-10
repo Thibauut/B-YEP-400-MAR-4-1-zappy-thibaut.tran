@@ -219,6 +219,7 @@ void tna(this_t *this, player_t *player);
 void ppo(this_t *this, player_t *player);
 void plv(this_t *this, player_t *player);
 void pin(this_t *this, player_t *player);
+void pnw(this_t *this, player_t *player);
 void sgt(this_t *this, player_t *player);
 void sst(this_t *this, player_t *player);
 
