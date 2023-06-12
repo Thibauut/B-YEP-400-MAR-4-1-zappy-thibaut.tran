@@ -35,7 +35,7 @@ void read_data(this_t *this, player_t *player, int i)
     if ((readValue = read(player->socket, buffer, 1024)) == 0) {
         close(player->socket);
         FD_CLR(player->socket, &this->tmpfds);
-        this->players = free_element_at(this->players, i);
+        player->socket = 0;
     } else {
         this->cmd = NULL;
         char *tmp = strdup(buffer);
@@ -53,65 +53,77 @@ void data_from_player(this_t *this)
     }
 }
 
+cmd_ai_t *get_action_by_id(this_t *this, char *uuid)
+{
+    list_cmd_ai_t *tmp = this->actions;
+    cmd_ai_t *action = malloc(sizeof(cmd_ai_t));
+    for (int index = 0; tmp != NULL; tmp = tmp->next, index += 1) {
+        if (my_strcmp(tmp->action->uuid, uuid) == 0) {
+            action = tmp->action;
+            free_element_at_ai(this->actions, index);
+            return (action);
+        }
+    }
+}
+
+void reset_timeout(this_t *this)
+{
+    double res = 1 / this->freq;
+    if (!this->timeout->tv_sec && !this->timeout->tv_usec) {
+        this->is_reset = true;
+        this->timeout->tv_sec = res;
+        this->timeout->tv_usec = res * 1000000;
+    }
+}
+
 void server_loop(this_t *this)
 {
     int _activity;
     this->maxfd = this->control_socket;
     printf("Server running on port: %d\n", this->port);
-
     this->actions = NULL;
-    this->timeout = NULL;
+    this->timeout = malloc(sizeof(struct timeval));
 
-    this->start_time = time(NULL);
-    this->curr_time = 0;
     while (1) {
+        reset_timeout(this);
         this->tmpfds = this->readfds;
-        this->current_time = time(NULL);
+        add_player_to_set(this);
 
-        if (this->current_time - this->refill_map_timer >= (20 * this->freq)) {
-            printf("Refill map\n");
-            refill_map(this);
-            this->refill_map_timer = this->current_time;
-        }
-        // if (this->current_time - this->start_time >= 1 && this->actions != NULL) {
-        //     this->start_time = this->current_time;
-        //     this->curr_time += 1;
-        //     printf("this->curr_time: %d\n", this->curr_time);
+        // if (this->current_time - this->refill_map_timer >= (20 * this->freq)) {
+        //     printf("Refill map\n");
+        //     refill_map(this);
+        //     this->refill_map_timer = this->current_time;
         // }
 
-        add_player_to_set(this);
+
+        // if (tmp != NULL && list_len_ai(tmp) == 1) {
+        //     this->timeout->tv_sec = tmp->action->time_exec;
+        //     this->timeout->tv_usec = 0;
+        // }
+
+        // if (this->timeout != NULL)
+        //     printf("this->timeout->tv_sec: %ld\n", this->timeout->tv_sec);
+
+        // list_cmd_ai_t *actions = this->actions;
+        // list_players_t *players = this->players;
+
+        // sleep(1);
+        // printf("factions: %d\n", list_len_ai(this->first_actions));
+        // if (this->first_actions != NULL) {
+        //     this->timeout = malloc(sizeof(struct timeval));
+        //     this->timeout->tv_sec = this->first_actions->action->time_exec;
+        //     this->timeout->tv_usec = 0;
+        // }
+
         _activity = select(this->maxfd + 1, &this->tmpfds, NULL, NULL, this->timeout);
+        if (_activity)
+            this->is_reset = false;
+
+
         select_error(_activity);
         handle_new_connection(this);
         data_from_player(this);
 
-
-
-
-
-        if (_activity == 0) {
-            // printf("Dead\n");
-            // list_cmd_ai_t *tmp_action = this->actions;
-            // list_players_t *tmp_player = this->players;
-
-            // if (tmp_action == NULL)
-            //     this->timeout = NULL;
-            // else {
-            //     // for (; tmp_action != NULL; tmp_action = tmp_action->next) {
-            //     //     for (int i = 0; tmp_player != NULL; tmp_player = tmp_player->next, i += 1) {
-            //     //         if (my_strcmp(tmp_player->player->id, tmp_action->action->uuid)) {
-            //     //             this->players = free_element_at(this->players, i);
-            //     //             close(tmp_player->player->socket);
-            //     //             break;
-            //     //         }
-            //     //     }
-            //     // }
-            //     if (tmp_action != NULL) {
-            //         tmp_action = free_element_at_ai(tmp_action, 0);
-            //         this->timeout->tv_sec = tmp_action->action->time_exec;
-            //     }
-            // }
-        }
     }
 }
 

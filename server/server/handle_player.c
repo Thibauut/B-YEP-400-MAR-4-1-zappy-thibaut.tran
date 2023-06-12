@@ -19,16 +19,6 @@ void init_inventory(player_t *player)
     player->inventory->thystame = 0;
 }
 
-cmd_ai_t *create_action(this_t *this, player_t *player, char *cmd)
-{
-    cmd_ai_t *new_action = malloc(sizeof(cmd_ai_t));
-    new_action->cmd = strdup(cmd);
-    new_action->time_exec = 126 / this->freq;
-    new_action->current_time = this->current_time;
-    new_action->uuid = player->id;
-    return (new_action);
-}
-
 int add_player_to_team(this_t *this, player_t *player)
 {
     list_teams_t *tmp = this->teams;
@@ -40,8 +30,8 @@ int add_player_to_team(this_t *this, player_t *player)
             player->team = tmp->team;
 
             init_inventory(player);
-            cmd_ai_t *new_action = create_action(this, player, "Life");
-            this->actions = add_element_ai(this->actions, new_action, list_len_ai(this->actions));
+            // cmd_ai_t *new_action = create_action(this, player, "Life");
+            // this->actions = add_element_ai(this->actions, new_action, list_len_ai(this->actions));
 
             dprintf(player->socket, "%d\n", tmp->team->max_players - tmp->team->nb_players);
             dprintf(player->socket, "%d %d\n", this->width, this->height);

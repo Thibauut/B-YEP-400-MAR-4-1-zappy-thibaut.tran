@@ -29,6 +29,7 @@
 #include <dlfcn.h>
 #include <time.h>
 #include "map.h"
+#include <pthread.h>
 
 typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
@@ -92,7 +93,7 @@ typedef struct cmd_ai_s {
     char *uuid;
     char *cmd;
     float time_exec;
-    float current_time;
+    float start_time;
 } cmd_ai_t;
 
 typedef struct list_cmd_ai_s {
@@ -124,6 +125,7 @@ typedef struct this_s {
 
     //SELECT
     list_cmd_ai_t *actions;
+    list_cmd_ai_t *first_actions;
 
     fd_set readfds;
     fd_set tmpfds;
@@ -134,8 +136,12 @@ typedef struct this_s {
     time_t refill_map_timer;
     time_t start_time;
 
-    int curr_time;
+    //THREAD
+    pthread_t thread_timer;
+    pthread_t thread_server;
+    int thread_status;
 
+    bool is_reset;
 
     //MAP
     map_t *map;
@@ -155,6 +161,7 @@ char *my_itoa(int nb);
 void display_help(void);
 char *get_unique_uuid(void);
 struct timeval float_to_timeval(float seconds);
+cmd_ai_t *get_action_by_id(this_t *this, char *uuid);
 
 list_players_t *create_cell(player_t *player);
 list_players_t *add_element(list_players_t *list, player_t *player, int pos);

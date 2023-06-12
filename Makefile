@@ -15,7 +15,7 @@ SRC_SERVER	=	server/utils/utils.c				\
 				server/utils/player_list_utils.c	\
 				server/utils/team_list_utils.c		\
 				server/utils/ai_cmd_list_utils.c	\
-				server/server/display_help.c		\
+				server/utils/display_help.c			\
 				server/server/get_params.c			\
 				server/server/error.c				\
 				server/server/server.c				\
@@ -24,7 +24,7 @@ SRC_SERVER	=	server/utils/utils.c				\
 				server/server/handle_cmd.c			\
 				server/server/handle_player.c		\
 				server/server/handle_connection.c	\
-				server/server/map.c					\
+				server/server/build_map/map.c		\
 				server/server/commands_gui/msz.c	\
 				server/server/commands_gui/bct.c	\
 				server/server/commands_gui/mct.c	\
@@ -58,7 +58,7 @@ ai_:
 	@chmod 777 $(NAME_AI)
 
 server_:
-	@gcc	-o $(NAME_SERVER) $(SRC_SERVER) -g3 -std=gnu17	-luuid
+	@gcc	-o $(NAME_SERVER) $(SRC_SERVER) -g3 -std=gnu17	-luuid -lpthread
 
 gui_:
 	@g++	-o $(NAME_GUI) $(SRC_GUI) -std=c++11 -Wall -lGL -lGLU -lglut -lGLEW -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system

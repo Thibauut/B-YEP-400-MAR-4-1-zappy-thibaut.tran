@@ -5,7 +5,7 @@
 ** map.c
 */
 
-#include "../include/my.h"
+#include "../../include/my.h"
 
 void init_density(this_t *this)
 {
@@ -60,19 +60,6 @@ void build_zappy_map(this_t *this)
     pop_ressources(this, this->map->max_mendiane, 0, MENDIANE);
     pop_ressources(this, this->map->max_phiras, 0, PHIRAS);
     pop_ressources(this, this->map->max_thystame, 0, THYSTAME);
-
-    // for (int y = 0; y < this->height; y++) {
-    //     for (int x = 0; x < this->width; x++) {
-    //         printf("tile [%d][%d]: ", y, x);
-    //         printf("food [%d] ", this->map->map[y][x].food);
-    //         printf("linemate [%d] ", this->map->map[y][x].linemate);
-    //         printf("deraumere [%d] ", this->map->map[y][x].deraumere);
-    //         printf("sibur [%d] ", this->map->map[y][x].sibur);
-    //         printf("mendiane [%d] ", this->map->map[y][x].mendiane);
-    //         printf("phiras [%d] ", this->map->map[y][x].phiras);
-    //         printf("thystame [%d]\n", this->map->map[y][x].thystame);
-    //     }
-    // }
 }
 
 void init_zappy_map(this_t *this)
@@ -146,17 +133,4 @@ void refill_map(this_t *this)
         pop_ressources(this, this->map->max_phiras - current_size[5], 0, PHIRAS);
     if (current_size[6] < this->map->max_thystame)
         pop_ressources(this, this->map->max_thystame - current_size[6], 0, THYSTAME);
-
-    // for (int y = 0; y < this->height; y++) {
-    //     for (int x = 0; x < this->width; x++) {
-    //         printf("tile [%d][%d]: ", y, x);
-    //         printf("food [%d] ", this->map->map[y][x].food);
-    //         printf("linemate [%d] ", this->map->map[y][x].linemate);
-    //         printf("deraumere [%d] ", this->map->map[y][x].deraumere);
-    //         printf("sibur [%d] ", this->map->map[y][x].sibur);
-    //         printf("mendiane [%d] ", this->map->map[y][x].mendiane);
-    //         printf("phiras [%d] ", this->map->map[y][x].phiras);
-    //         printf("thystame [%d]\n", this->map->map[y][x].thystame);
-    //     }
-    // }
 }

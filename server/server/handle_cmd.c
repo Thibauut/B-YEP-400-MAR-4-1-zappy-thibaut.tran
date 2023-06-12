@@ -7,30 +7,33 @@
 
 #include "../include/my.h"
 
+cmd_ai_t *create_action(this_t *this, player_t *player, char *cmd)
+{
+    cmd_ai_t *new_action = malloc(sizeof(cmd_ai_t));
+    new_action->cmd = strdup(cmd);
+    new_action->time_exec = 126 / this->freq;
+    new_action->start_time = (float)this->current_time;
+    new_action->uuid = player->id;
+    return (new_action);
+}
+
 int exec_ai_commands(this_t *this, player_t *player)
 {
-    list_cmd_ai_t *tmp = NULL;
     this->timeout = malloc(sizeof(struct timeval));
     if ((add_player_to_team(this, player) == 0) && player->is_gui == false) {
         player->in_team = true;
-        tmp = this->actions;
-    }
-    if (tmp != NULL) {
-        this->timeout->tv_sec = tmp->action->time_exec;
-        this->timeout->tv_usec = 0;
+        return 0;
     }
 
+    this->actions = add_element_ai(this->actions, create_action(this, player, this->cmd[0]), list_len_ai(this->actions));
 
-
-
-
-    // if (tmp != NULL && tmp->next == NULL) {
-    //     this->timeout->tv_sec = tmp->action->time_exec - this->curr_time;
-    //     this->timeout->tv_usec = 0;
-    //     tmp = tmp->next;
+    // for (list_cmd_ai_t *tmp = this->actions; tmp != NULL; tmp = tmp->next) {
+    //     printf("time exe: %f\n", tmp->action->time_exec);
+    //     printf("time start: %f\n", tmp->action->start_time);
+    //     printf("id: %s\n", tmp->action->uuid);
+    //     printf("type: %s\n", tmp->action->cmd);
     // }
-    // printf("time while connect: %ld\n", this->timeout->tv_sec);
-
+    // printf("\n");
 
     // if (player->in_team == true && player->is_gui == false) {
     //     printf("cmd: %s\n", this->cmd[0]);
