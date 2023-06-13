@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2022
 ** B-YEP-400-MAR-4-1-zappy-thibaut.tran
 ** File description:
-** init_server.C
+** server_init.c
 */
 
 #include "../include/my.h"

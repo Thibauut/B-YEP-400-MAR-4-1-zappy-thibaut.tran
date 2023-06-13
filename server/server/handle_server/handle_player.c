@@ -30,7 +30,7 @@ int add_player_to_team(this_t *this, player_t *player)
             player->team = tmp->team;
 
             init_inventory(player);
-            // cmd_ai_t *new_action = create_action(this, player, "Life");
+            // cmd_ai_t *new_action = create_action_ai(this, player, "Life");
             // this->actions = add_element_ai(this->actions, new_action, list_len_ai(this->actions));
 
             dprintf(player->socket, "%d\n", tmp->team->max_players - tmp->team->nb_players);

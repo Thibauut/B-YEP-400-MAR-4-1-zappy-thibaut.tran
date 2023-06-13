@@ -7,6 +7,15 @@
 
 #include "../../include/my.h"
 
+cmd_ai_t *create_action_ai(this_t *this, player_t *player, char *cmd, float duration)
+{
+    cmd_ai_t *new_action = malloc(sizeof(cmd_ai_t));
+    new_action->cmd = strdup(cmd);
+    new_action->duration = duration / this->freq;
+    new_action->uuid = player->id;
+    return (new_action);
+}
+
 int get_ai_commands(this_t *this, player_t *player)
 {
     this->timeout = malloc(sizeof(struct timeval));
@@ -14,17 +23,6 @@ int get_ai_commands(this_t *this, player_t *player)
         player->in_team = true;
         return 0;
     }
-
-    list_cmd_ai_t *tmp = this->actions;
-    printf("----------------------------------\n");
-    for (; tmp; tmp = tmp->next) {
-        printf("cmd: %s\n", tmp->action->cmd);
-        printf("uuid: %s\n", tmp->action->uuid);
-        printf("duration: %f\n", tmp->action->duration);
-
-    }
-    printf("----------------------------------\n");
-
     if (exec_ai_commands(this, player, 0) == 0)
         return 0;
     return 1;
@@ -33,7 +31,6 @@ int get_ai_commands(this_t *this, player_t *player)
 int exec_ai_commands(this_t *this, player_t *player, int exec)
 {
     if (player->in_team == true && player->is_gui == false) {
-        printf("cmd: %s\n", this->cmd[0]);
         if (move_commands(this, player, exec) == 0)
             return 0;
         if (action_commands(this, player, exec) == 0)

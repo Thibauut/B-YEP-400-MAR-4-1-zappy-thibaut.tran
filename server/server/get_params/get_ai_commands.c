@@ -45,7 +45,7 @@ int action_commands(this_t *this, player_t *player, int exec)
 int player_commands(this_t *this, player_t *player, int exec)
 {
     if (my_strcmp(this->cmd[0], "Connect_nbr") == 0) {
-        // connect_nbr(this, player);
+        connect_nbr(this, player);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "Fork") == 0) {

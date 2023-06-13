@@ -7,26 +7,27 @@
 
 #include "../include/my.h"
 
-cmd_ai_t *get_action_by_id(this_t *this, char *uuid)
+player_t *get_player_by_uuid(this_t *this, char *uuid)
 {
-    list_cmd_ai_t *tmp = this->actions;
-    cmd_ai_t *action = malloc(sizeof(cmd_ai_t));
-    for (int index = 0; tmp != NULL; tmp = tmp->next, index += 1) {
-        if (my_strcmp(tmp->action->uuid, uuid) == 0) {
-            action = tmp->action;
-            free_element_at_ai(this->actions, index);
-            return (action);
+    player_t *player = malloc(sizeof(player_t));
+    for (list_players_t *tmp = this->players; tmp != NULL; tmp = tmp->next) {
+        if (my_strcmp(tmp->player->id, uuid) == 0) {
+            player = tmp->player;
+            return player;
         }
     }
 }
 
-void server_timer(this_t *this)
+void exec_actions(this_t *this)
 {
-    double res = (double)1 / (double)this->freq;
-    if (!this->timeout->tv_sec && !this->timeout->tv_usec) {
-        this->is_reset = true;
-        this->timeout->tv_sec = res;
-        this->timeout->tv_usec = res * 1000000;
+    list_cmd_ai_t *tmp = this->actions;
+    for (int i = 0; tmp != NULL; tmp = tmp->next, i += 1) {
+        if (tmp->action->duration <= 0) {
+            exec_ai_commands(this, get_player_by_uuid(this, tmp->action->uuid), 1);
+            this->actions = free_element_at_ai(this->actions, i);
+            return;
+        }
+        tmp->action->duration -= 1;
     }
 }
 
@@ -51,7 +52,7 @@ void server_loop(this_t *this)
         data_from_player(this);
 
         if (this->is_reset == true) {
-            
+            exec_actions(this);
             update_map(this);
         }
     }

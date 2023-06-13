@@ -54,7 +54,7 @@ void handle_new_connection(this_t *this)
         }
         player_t *newplayer = create_player(this);
         printf("New connection id: %s\n", newplayer->id);
-        dprintf(this->new_socket, "Welcome to our Zappy server!\n");
+        dprintf(this->new_socket, "WELCOME!\n");
         this->players = add_element(this->players, newplayer, 0);
         new_player(this);
     }

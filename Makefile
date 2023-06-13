@@ -19,12 +19,14 @@ SRC_SERVER	=	server/utils/utils.c									\
 				server/server/get_params/get_params.c					\
 				server/server/socket_error/error.c						\
 				server/server/server.c									\
-				server/server/read_server.c								\
-				server/server/init_server.c								\
-				server/server/init_teams.c								\
+				server/server/server_read.c								\
+				server/server/server_init.c								\
+				server/server/server_timer.c							\
+				server/server/teams_init.c								\
 				server/server/get_params/get_ai_commands.c				\
 				server/server/get_params/get_gui_commands.c				\
 				server/server/handle_server/handle_gui_commands.c		\
+				server/server/handle_server/handle_commands.c					\
 				server/server/handle_server/handle_player.c				\
 				server/server/handle_server/handle_connection.c			\
 				server/server/handle_server/handle_ai_commands.c		\
@@ -41,6 +43,7 @@ SRC_SERVER	=	server/utils/utils.c									\
 				server/server/commands_gui/sst.c						\
 				server/server/commands_ai/inventory.c					\
 				server/server/commands_ai/look.c						\
+				server/server/commands_ai/connect_nbr.c					\
 				server/main.c
 
 NAME_GUI	=	zappy_gui

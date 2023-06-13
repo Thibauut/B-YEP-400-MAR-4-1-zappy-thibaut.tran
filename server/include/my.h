@@ -162,7 +162,7 @@ void display_help(void);
 char *get_unique_uuid(void);
 struct timeval float_to_timeval(float seconds);
 cmd_ai_t *get_action_by_id(this_t *this, char *uuid);
-cmd_ai_t *create_action(this_t *this, player_t *player, char *cmd, float duration);
+cmd_ai_t *create_action_ai(this_t *this, player_t *player, char *cmd, float duration);
 
 list_players_t *create_cell(player_t *player);
 list_players_t *add_element(list_players_t *list, player_t *player, int pos);
@@ -201,7 +201,7 @@ void init_zappy_teams(this_t *this);
 void init_server(this_t *this);
 void run_server(this_t *this);
 void data_from_player(this_t *this);
-
+void server_timer(this_t *this);
 int add_player_to_team(this_t *this, player_t *player);
 void add_player_to_set(this_t *this);
 void handle_new_connection(this_t *this);
@@ -243,3 +243,4 @@ void sst(this_t *this, player_t *player);
 //COMMANDS (AI)
 void inventory(this_t *this, player_t *player, int exec);
 void look(this_t *this, player_t *player, int exec);
+void connect_nbr(this_t *this, player_t *player);
