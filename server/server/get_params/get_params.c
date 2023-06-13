@@ -5,7 +5,7 @@
 ** get_params.c
 */
 
-#include "../include/my.h"
+#include "../../include/my.h"
 
 void init_params(this_t *this)
 {
@@ -107,6 +107,7 @@ void get_freq(this_t *this, char *freq)
 
 void get_params(this_t *this, int ac, char **av)
 {
+    int err = 0;
     for (int i = 0; av[i]; i += 1) {
         if (my_strcmp(av[i], "-p") == 0) {
             error_params(av, i, 1, "-p", true);

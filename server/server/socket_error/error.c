@@ -5,7 +5,7 @@
 ** error.c
 */
 
-#include "../include/my.h"
+#include "../../include/my.h"
 
 void socket_error(int control_socket)
 {
@@ -39,9 +39,10 @@ void listen_error(int _listen)
     }
 }
 
-void select_error(int _activity)
+void select_error(this_t *this, int _activity)
 {
     if ((_activity < 0) && (errno != EINTR)) {
+        this->is_reset = false;
         perror("select()");
         exit(84);
     }

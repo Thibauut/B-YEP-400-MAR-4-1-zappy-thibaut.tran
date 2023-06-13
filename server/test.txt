@@ -19,3 +19,10 @@ Eject           eject players from this tile    ok/ko
 Take_object     take object                     ok/ko
 Set_object      set object down                 ok/ko
 Incantation     start incantation               Elevation underway Current level: k /ko
+
+
+Eject = pex
+Broadcast = pbc
+Incantation = pic
+End of Incantation = pie
+Fork = pfk

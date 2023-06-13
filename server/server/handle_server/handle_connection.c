@@ -5,7 +5,7 @@
 ** handle_connection.c
 */
 
-#include "../include/my.h"
+#include "../../include/my.h"
 
 void add_player_to_set(this_t *this)
 {

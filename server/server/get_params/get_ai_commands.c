@@ -5,12 +5,12 @@
 ** commands.c
 */
 
-#include "../include/my.h"
+#include "../../include/my.h"
 
-int move_commands(this_t *this, player_t *player)
+int move_commands(this_t *this, player_t *player, int exec)
 {
     if (my_strcmp(this->cmd[0], "Forward") == 0) {
-        // move_forward(this, player);
+        // forward(this, player);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "Right") == 0) {
@@ -24,14 +24,14 @@ int move_commands(this_t *this, player_t *player)
     return 1;
 }
 
-int action_commands(this_t *this, player_t *player)
+int action_commands(this_t *this, player_t *player, int exec)
 {
     if (my_strcmp(this->cmd[0], "Look") == 0) {
-        // look(this, player);
+        look(this, player, exec);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "Inventory") == 0) {
-        // inventory(this, player);
+        inventory(this, player, exec);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "Incantation") == 0) {
@@ -42,7 +42,7 @@ int action_commands(this_t *this, player_t *player)
     return 1;
 }
 
-int player_commands(this_t *this, player_t *player)
+int player_commands(this_t *this, player_t *player, int exec)
 {
     if (my_strcmp(this->cmd[0], "Connect_nbr") == 0) {
         // connect_nbr(this, player);
@@ -58,3 +58,4 @@ int player_commands(this_t *this, player_t *player)
     }
     return 1;
 }
+

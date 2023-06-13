@@ -5,7 +5,7 @@
 ** handle_player.c
 */
 
-#include "../include/my.h"
+#include "../../include/my.h"
 
 void init_inventory(player_t *player)
 {

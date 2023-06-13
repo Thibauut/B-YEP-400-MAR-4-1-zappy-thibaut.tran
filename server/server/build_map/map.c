@@ -134,3 +134,13 @@ void refill_map(this_t *this)
     if (current_size[6] < this->map->max_thystame)
         pop_ressources(this, this->map->max_thystame - current_size[6], 0, THYSTAME);
 }
+
+void update_map(this_t *this)
+{
+    if (this->refill_map_timer >= (double)20 / (double)this->freq) {
+        printf("map refiled\n");
+        refill_map(this);
+        this->refill_map_timer = 0;
+    }
+    this->refill_map_timer += 1;
+}

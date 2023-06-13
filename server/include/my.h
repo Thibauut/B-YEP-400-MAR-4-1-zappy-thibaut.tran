@@ -92,8 +92,8 @@ typedef struct list_players_s {
 typedef struct cmd_ai_s {
     char *uuid;
     char *cmd;
-    float time_exec;
-    float start_time;
+    float duration;
+    // float start_time;
 } cmd_ai_t;
 
 typedef struct list_cmd_ai_s {
@@ -133,7 +133,7 @@ typedef struct this_s {
 
     struct timeval *timeout;
     time_t current_time;
-    time_t refill_map_timer;
+    int refill_map_timer;
     time_t start_time;
 
     //THREAD
@@ -162,6 +162,7 @@ void display_help(void);
 char *get_unique_uuid(void);
 struct timeval float_to_timeval(float seconds);
 cmd_ai_t *get_action_by_id(this_t *this, char *uuid);
+cmd_ai_t *create_action(this_t *this, player_t *player, char *cmd, float duration);
 
 list_players_t *create_cell(player_t *player);
 list_players_t *add_element(list_players_t *list, player_t *player, int pos);
@@ -191,10 +192,16 @@ void get_params(this_t *this, int ac, char **av);
 //MAP
 void init_zappy_map(this_t *this);
 void refill_map(this_t *this);
+void update_map(this_t *this);
 
 //SERVER
+void init_socket(this_t *this);
+void init_fdset(this_t *this);
+void init_zappy_teams(this_t *this);
 void init_server(this_t *this);
 void run_server(this_t *this);
+void data_from_player(this_t *this);
+
 int add_player_to_team(this_t *this, player_t *player);
 void add_player_to_set(this_t *this);
 void handle_new_connection(this_t *this);
@@ -204,15 +211,18 @@ void socket_error(int control_socket);
 void htons_error(this_t *this);
 void bind_error(int _bind);
 void listen_error(int _listen);
-void select_error(int _activity);
+void select_error(this_t *this, int _activity);
 
 //COMMANDS (SERVER)
 void commands(this_t *this, player_t *player);
-int exec_ai_commands(this_t *this, player_t *player);
+int get_ai_commands(this_t *this, player_t *player);
+int exec_ai_commands(this_t *this, player_t *player, int exec);
+
 int exec_gui_commands(this_t *this, player_t *player);
-int move_commands(this_t *this, player_t *player);
-int action_commands(this_t *this, player_t *player);
-int player_commands(this_t *this, player_t *player);
+
+int move_commands(this_t *this, player_t *player, int exec);
+int action_commands(this_t *this, player_t *player, int exec);
+int player_commands(this_t *this, player_t *player, int exec);
 
 //COMMANDS (GUI)
 int map_info_gui_commands(this_t *this, player_t *player);
@@ -231,3 +241,5 @@ void sgt(this_t *this, player_t *player);
 void sst(this_t *this, player_t *player);
 
 //COMMANDS (AI)
+void inventory(this_t *this, player_t *player, int exec);
+void look(this_t *this, player_t *player, int exec);

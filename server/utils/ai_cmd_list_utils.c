@@ -14,8 +14,7 @@ list_cmd_ai_t *create_cell_ai(cmd_ai_t *cmd)
         return (NULL);
     cell->action = malloc(sizeof(cmd_ai_t));
     cell->action->cmd = cmd->cmd;
-    cell->action->time_exec = cmd->time_exec;
-    cell->action->start_time = cmd->start_time;
+    cell->action->duration = cmd->duration;
     cell->action->uuid = cmd->uuid;
     cell->next = NULL;
     return (cell);

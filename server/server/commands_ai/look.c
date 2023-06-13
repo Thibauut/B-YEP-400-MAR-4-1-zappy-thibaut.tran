@@ -6,3 +6,11 @@
 */
 
 #include "../../include/my.h"
+
+void look(this_t *this, player_t *player, int exec)
+{
+    if (exec == 0) {
+        cmd_ai_t *action = create_action(this, player, "Look", 7);
+        this->actions = add_element_ai(this->actions, action, list_len_ai(this->actions));
+    }
+}

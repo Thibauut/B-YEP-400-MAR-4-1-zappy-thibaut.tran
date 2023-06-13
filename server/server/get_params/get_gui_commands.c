@@ -5,7 +5,7 @@
 ** commands_gui.c
 */
 
-#include "../include/my.h"
+#include "../../include/my.h"
 
 int map_info_gui_commands(this_t *this, player_t *player)
 {
