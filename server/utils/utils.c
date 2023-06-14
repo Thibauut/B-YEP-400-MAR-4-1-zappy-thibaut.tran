@@ -161,3 +161,14 @@ struct timeval float_to_timeval(float seconds)
     tv.tv_usec = microseconds % 1000000;
     return tv;
 }
+
+player_t *get_player_by_uuid(this_t *this, char *uuid)
+{
+    player_t *player = malloc(sizeof(player_t));
+    for (list_players_t *tmp = this->players; tmp != NULL; tmp = tmp->next) {
+        if (my_strcmp(tmp->player->id, uuid) == 0) {
+            player = tmp->player;
+            return player;
+        }
+    }
+}

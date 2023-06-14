@@ -23,7 +23,7 @@ int get_ai_commands(this_t *this, player_t *player)
         player->in_team = true;
         return 0;
     }
-    if (exec_ai_commands(this, player, 0) == 0)
+    if (exec_ai_commands(this, player, ADD_TO_QUEUE) == 0)
         return 0;
     return 1;
 }

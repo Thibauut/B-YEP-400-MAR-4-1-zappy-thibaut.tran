@@ -7,27 +7,19 @@
 
 #include "../include/my.h"
 
-player_t *get_player_by_uuid(this_t *this, char *uuid)
+void update_player_life(this_t *this)
 {
-    player_t *player = malloc(sizeof(player_t));
-    for (list_players_t *tmp = this->players; tmp != NULL; tmp = tmp->next) {
-        if (my_strcmp(tmp->player->id, uuid) == 0) {
-            player = tmp->player;
-            return player;
+    list_players_t *tmp = this->players;
+    for (int index = 0; tmp; tmp = tmp->next, index += 1) {
+        if (tmp->player->life <= 0 && tmp->player->in_team == true && tmp->player->inventory->food <= 0) {
+            dprintf(tmp->player->socket, "dead\n");
+            this->players = free_element_at(this->players, index);
         }
-    }
-}
-
-void exec_actions(this_t *this)
-{
-    list_cmd_ai_t *tmp = this->actions;
-    for (int i = 0; tmp != NULL; tmp = tmp->next, i += 1) {
-        if (tmp->action->duration <= 0) {
-            exec_ai_commands(this, get_player_by_uuid(this, tmp->action->uuid), 1);
-            this->actions = free_element_at_ai(this->actions, i);
-            return;
+        if (tmp->player->life <= 0 && tmp->player->in_team == true && tmp->player->inventory->food > 0) {
+            tmp->player->life = 1260 / this->freq;
+            tmp->player->inventory->food -= 1;
         }
-        tmp->action->duration -= 1;
+        tmp->player->life -= 1;
     }
 }
 
@@ -39,7 +31,7 @@ void server_loop(this_t *this)
     this->actions = NULL;
     this->timeout = malloc(sizeof(struct timeval));
     this->refill_map_timer = 0;
-    this->is_reset = false;
+    this->is_start = false;
 
     while (1) {
         server_timer(this);
@@ -51,9 +43,10 @@ void server_loop(this_t *this)
         handle_new_connection(this);
         data_from_player(this);
 
-        if (this->is_reset == true) {
+        if (this->is_start == true) {
             exec_actions(this);
             update_map(this);
+            update_player_life(this);
         }
     }
 }

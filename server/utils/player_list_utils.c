@@ -22,6 +22,7 @@ list_players_t *create_cell(player_t *player)
     cell->player->x = player->x;
     cell->player->y = player->y;
     cell->player->o = player->o;
+    cell->player->life = player->life;
     cell->next = NULL;
     return (cell);
 }

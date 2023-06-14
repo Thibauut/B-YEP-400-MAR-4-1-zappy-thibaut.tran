@@ -39,8 +39,10 @@ player_t *create_player(this_t *this)
     newplayer->team = NULL;
     newplayer->level = 0;
     newplayer->is_gui = false;
-    newplayer->x = rand() % this->width;
-    newplayer->y = rand() % this->height;
+    newplayer->x = 0;
+    newplayer->y = 0;
+    newplayer->o = 0;
+    newplayer->life = 0;
     return (newplayer);
 }
 

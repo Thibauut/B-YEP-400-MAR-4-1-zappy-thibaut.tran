@@ -42,7 +42,7 @@ void listen_error(int _listen)
 void select_error(this_t *this, int _activity)
 {
     if ((_activity < 0) && (errno != EINTR)) {
-        this->is_reset = false;
+        this->is_start = false;
         perror("select()");
         exit(84);
     }

@@ -10,15 +10,15 @@
 int move_commands(this_t *this, player_t *player, int exec)
 {
     if (my_strcmp(this->cmd[0], "Forward") == 0) {
-        // forward(this, player);
+        forward(this, player, exec);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "Right") == 0) {
-        // move_right(this, player);
+        right(this, player, exec);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "Left") == 0) {
-        // move_left(this, player);
+        left(this, player, exec);
         return 0;
     }
     return 1;

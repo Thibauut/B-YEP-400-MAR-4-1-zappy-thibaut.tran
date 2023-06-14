@@ -13,7 +13,7 @@ void init_params(this_t *this)
     this->width = 0;
     this->height = 0;
     this->nb_clients = 0;
-    this->freq = 0;
+    this->freq = 100;
 }
 
 void error_params(char**av, int i, int max_args, char *option, bool enable_max_args)

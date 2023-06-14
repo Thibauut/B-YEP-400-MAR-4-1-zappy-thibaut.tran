@@ -34,6 +34,8 @@
 typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
 typedef struct in_addr IN_ADDR;
+#define ADD_TO_QUEUE 0
+#define EXECUTE 1
 
 //TEAM
 typedef struct team_s {
@@ -66,6 +68,11 @@ typedef struct inventory_s {
     int thystame;
 } inventory_t;
 
+typedef struct vector2d_s {
+    int x;
+    int y;
+} vector2d_t;
+
 typedef struct player_s {
     bool in_team;
     bool is_gui;
@@ -78,7 +85,8 @@ typedef struct player_s {
     int level;
     int x;
     int y;
-   enum orientation_e o;
+    enum orientation_e o;
+    int life;
 
     bool incentation;
 } player_t;
@@ -111,7 +119,11 @@ typedef struct this_s {
     int nb_clients;
     int freq;
     char **teams_name;
+    struct timeval *timeout;
+    int refill_map_timer;
+    bool is_start;
 
+    //PLAYERS & TEAMS
     list_players_t *players;
     list_teams_t *teams;
 
@@ -126,26 +138,12 @@ typedef struct this_s {
     //SELECT
     list_cmd_ai_t *actions;
     list_cmd_ai_t *first_actions;
-
     fd_set readfds;
     fd_set tmpfds;
     fd_set writefds;
 
-    struct timeval *timeout;
-    time_t current_time;
-    int refill_map_timer;
-    time_t start_time;
-
-    //THREAD
-    pthread_t thread_timer;
-    pthread_t thread_server;
-    int thread_status;
-
-    bool is_reset;
-
     //MAP
     map_t *map;
-
 } this_t;
 
 //UTILS
@@ -163,6 +161,7 @@ char *get_unique_uuid(void);
 struct timeval float_to_timeval(float seconds);
 cmd_ai_t *get_action_by_id(this_t *this, char *uuid);
 cmd_ai_t *create_action_ai(this_t *this, player_t *player, char *cmd, float duration);
+player_t *get_player_by_uuid(this_t *this, char *uuid);
 
 list_players_t *create_cell(player_t *player);
 list_players_t *add_element(list_players_t *list, player_t *player, int pos);
@@ -217,12 +216,11 @@ void select_error(this_t *this, int _activity);
 void commands(this_t *this, player_t *player);
 int get_ai_commands(this_t *this, player_t *player);
 int exec_ai_commands(this_t *this, player_t *player, int exec);
-
 int exec_gui_commands(this_t *this, player_t *player);
-
 int move_commands(this_t *this, player_t *player, int exec);
 int action_commands(this_t *this, player_t *player, int exec);
 int player_commands(this_t *this, player_t *player, int exec);
+void exec_actions(this_t *this);
 
 //COMMANDS (GUI)
 int map_info_gui_commands(this_t *this, player_t *player);
@@ -244,3 +242,7 @@ void sst(this_t *this, player_t *player);
 void inventory(this_t *this, player_t *player, int exec);
 void look(this_t *this, player_t *player, int exec);
 void connect_nbr(this_t *this, player_t *player);
+
+void right(this_t *this, player_t *player, int exec);
+void left(this_t *this, player_t *player, int exec);
+void forward(this_t *this, player_t *player, int exec);

@@ -11,7 +11,7 @@ void pnw(this_t *this, player_t *player)
 {
     list_players_t *tmp = this->players;
     for (; tmp != NULL; tmp = tmp->next) {
-        if (tmp->player->is_gui == true || tmp->player->in_team == true) {
+        if (tmp->player->is_gui == true) {
             dprintf(tmp->player->socket, "{\n\t\"id\": \"%s\",\n\t\"x\": %d,\n\t\"y\": %d,\n\t\"o\": %d,\n\t\"level\": %d,\n\t\"team\": \"%s\"\n}\n",
             player->id,
             player->x,

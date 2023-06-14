@@ -11,7 +11,7 @@ void server_timer(this_t *this)
 {
     double res = (double)1 / (double)this->freq;
     if (!this->timeout->tv_sec && !this->timeout->tv_usec) {
-        this->is_reset = true;
+        this->is_start = true;
         this->timeout->tv_sec = res;
         this->timeout->tv_usec = res * 1000000;
     }
