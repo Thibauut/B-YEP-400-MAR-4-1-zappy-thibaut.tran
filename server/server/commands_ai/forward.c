@@ -30,5 +30,6 @@ void forward(this_t *this, player_t *player, int exec)
     player->x += new_pos[player->o].x;
     player->y += new_pos[player->o].y;
     handle_borders(this, player);
+    printf("position: %d %d\n", player->x, player->y);
     dprintf(player->socket, "ok\n");
 }

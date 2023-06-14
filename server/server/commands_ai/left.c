@@ -7,6 +7,26 @@
 
 #include "../../include/my.h"
 
+void set_direction_left(player_t *player, int orientation)
+{
+    if (orientation == NORTH) {
+        player->o = WEST;
+        return;
+    }
+    if (orientation == WEST) {
+        player->o = SOUTH;
+        return;
+    }
+    if (orientation == SOUTH) {
+        player->o = EAST;
+        return;
+    }
+    if (orientation == EAST) {
+        player->o = NORTH;
+        return;
+    }
+}
+
 void left(this_t *this, player_t *player, int exec)
 {
     if (exec == 0) {
@@ -14,5 +34,6 @@ void left(this_t *this, player_t *player, int exec)
         this->actions = add_element_ai(this->actions, action, list_len_ai(this->actions));
         return;
     }
-    printf("ok\n");
+    set_direction_left(player, player->o);
+    dprintf(player->socket, "ok\n");
 }

@@ -101,7 +101,6 @@ typedef struct cmd_ai_s {
     char *uuid;
     char *cmd;
     float duration;
-    // float start_time;
 } cmd_ai_t;
 
 typedef struct list_cmd_ai_s {
