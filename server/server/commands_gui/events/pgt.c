@@ -20,5 +20,5 @@ void send_pgt_to_gui(this_t *this, char *take_id, int resource)
 
 void pgt(this_t *this, player_t *player, char *take_id, int resource)
 {
-    dprintf(player->socket, "{\n\t\"pgt_id\": \"%s\",\n\t\"pgt_resource\": %d\n}\n", take_id, resource);
+    dprintf(player->socket, "{\n\t\"cmd\": \"pgt\",\n\t\"id\": \"%s\",\n\t\"resource\": %d\n}\n", take_id, resource);
 }

@@ -20,5 +20,5 @@ void send_pdr_to_gui(this_t *this, char *drop_id, int resource)
 
 void pdr(this_t *this, player_t *player, char *drop_id, int resource)
 {
-    dprintf(player->socket, "{\n\t\"pdr_id\": \"%s\",\n\t\"pdr_resource\": %d\n}\n", drop_id, resource);
+    dprintf(player->socket, "{\n\t\"cmd\": \"pdr\",\n\t\"id\": \"%s\",\n\t\"resource\": %d\n}\n", drop_id, resource);
 }

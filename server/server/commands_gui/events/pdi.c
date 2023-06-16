@@ -20,5 +20,5 @@ void send_pdi_to_gui(this_t *this, char *uuid)
 
 void pdi(this_t *this, player_t *player, char *dead_id)
 {
-    dprintf(player->socket, "{\n\t\"pdi_id\": \"%s\"\n}\n", dead_id);
+    dprintf(player->socket, "{\n\t\"cmd\": \"pdi\",\n\t\"id\": \"%s\"\n}\n", dead_id);
 }
