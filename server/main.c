@@ -12,7 +12,7 @@ int main(int ac, char **av)
     this_t *this = malloc(sizeof(this_t));
     srand(time(NULL));
     this->refill_map_timer = time(NULL);
-    if (ac > 11) {
+    if (ac > 1) {
         if (my_strcmp(av[1], "-help") == 0){
             display_help();
             return (0);
@@ -22,5 +22,6 @@ int main(int ac, char **av)
         run_server(this);
         return (0);
     }
+    display_help();
     return (84);
 }

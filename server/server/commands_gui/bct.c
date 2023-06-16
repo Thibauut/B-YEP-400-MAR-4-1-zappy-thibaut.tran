@@ -27,4 +27,3 @@ void bct(this_t *this, player_t *player)
     this->map->map[atoi(this->cmd[2])][atoi(this->cmd[1])].phiras,
     this->map->map[atoi(this->cmd[2])][atoi(this->cmd[1])].thystame);
 }
-

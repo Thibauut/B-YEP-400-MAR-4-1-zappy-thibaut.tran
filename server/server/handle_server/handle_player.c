@@ -28,10 +28,12 @@ int add_player_to_team(this_t *this, player_t *player)
                 return 1;
             tmp->team->nb_players += 1;
             player->team = tmp->team;
+            player->level = 1;
             player->x = rand() % this->width;
             player->y = rand() % this->height;
             player->o = rand() % 4;
             player->life = 1260 / this->freq;
+            player->incantation = false;
             init_inventory(player);
             dprintf(player->socket, "%d\n", tmp->team->max_players - tmp->team->nb_players);
             dprintf(player->socket, "%d %d\n", this->width, this->height);

@@ -15,6 +15,7 @@ SRC_SERVER	=	server/utils/utils.c									\
 				server/utils/player_list_utils.c						\
 				server/utils/team_list_utils.c							\
 				server/utils/ai_cmd_list_utils.c						\
+				server/utils/look_list_utils.c							\
 				server/utils/display_help.c								\
 				server/server/get_params/get_params.c					\
 				server/server/socket_error/error.c						\
@@ -37,16 +38,25 @@ SRC_SERVER	=	server/utils/utils.c									\
 				server/server/commands_gui/tna.c						\
 				server/server/commands_gui/ppo.c						\
 				server/server/commands_gui/plv.c						\
-				server/server/commands_gui/pin.c						\
-				server/server/commands_gui/pnw.c						\
 				server/server/commands_gui/sgt.c						\
 				server/server/commands_gui/sst.c						\
+				server/server/commands_gui/pin.c						\
+				server/server/commands_gui/events/pnw.c					\
+				server/server/commands_gui/events/pdi.c					\
+				server/server/commands_gui/events/pdr.c					\
+				server/server/commands_gui/events/pgt.c					\
 				server/server/commands_ai/inventory.c					\
 				server/server/commands_ai/look.c						\
 				server/server/commands_ai/connect_nbr.c					\
 				server/server/commands_ai/forward.c						\
 				server/server/commands_ai/right.c						\
 				server/server/commands_ai/left.c						\
+				server/server/commands_ai/take_object.c					\
+				server/server/commands_ai/set_object.c					\
+				server/server/commands_ai/eject.c						\
+				server/server/commands_ai/broadcast.c					\
+				server/server/commands_ai/fork.c						\
+				server/server/commands_ai/incantation.c					\
 				server/main.c
 
 NAME_GUI	=	zappy_gui

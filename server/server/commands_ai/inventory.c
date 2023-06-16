@@ -14,7 +14,6 @@ void inventory(this_t *this, player_t *player, int exec)
         this->actions = add_element_ai(this->actions, action, list_len_ai(this->actions));
         return;
     }
-    printf("Inventory done by %s\n", player->id);
     dprintf(player->socket, "[ food %d, linemate %d, deraumere %d, sibur %d, mendiane %d, phiras %d, thystame %d ]\n",
     player->inventory->food,
     player->inventory->linemate,

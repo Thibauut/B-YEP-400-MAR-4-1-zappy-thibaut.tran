@@ -24,21 +24,35 @@ int move_commands(this_t *this, player_t *player, int exec)
     return 1;
 }
 
-int action_commands(this_t *this, player_t *player, int exec)
+int object_commands(this_t *this, player_t *player, int exec)
 {
-    if (my_strcmp(this->cmd[0], "Look") == 0) {
-        look(this, player, exec);
+    if (my_strcmp(this->cmd[0], "Take") == 0 && my_strcmp(this->cmd[1], "object") == 0) {
+        printf("take object\n");
+        take_object(this, player, exec);
         return 0;
     }
+    if (my_strcmp(this->cmd[0], "Set") == 0 && my_strcmp(this->cmd[1], "object") == 0) {
+        printf("set object\n");
+        set_object(this, player, exec);
+        return 0;
+    }
+    return 1;
+}
+
+int action_commands(this_t *this, player_t *player, int exec)
+{
     if (my_strcmp(this->cmd[0], "Inventory") == 0) {
         inventory(this, player, exec);
         return 0;
     }
-    if (my_strcmp(this->cmd[0], "Incantation") == 0) {
-        // incantation(this, player);
+    if (my_strcmp(this->cmd[0], "Look") == 0) {
+        look(this, player, exec);
         return 0;
     }
-
+    if (my_strcmp(this->cmd[0], "Incantation") == 0) {
+        incantation(this, player, exec);
+        return 0;
+    }
     return 1;
 }
 

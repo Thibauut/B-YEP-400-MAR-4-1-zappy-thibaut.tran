@@ -9,26 +9,11 @@
 
 void init_params(this_t *this)
 {
-    this->port = 0;
-    this->width = 0;
-    this->height = 0;
+    this->port = 4242;
+    this->width = 10;
+    this->height = 10;
     this->nb_clients = 0;
     this->freq = 100;
-}
-
-void error_params(char**av, int i, int max_args, char *option, bool enable_max_args)
-{
-    int index = 0;
-    for (; av[i + 1] != NULL && av[i + 1][0] != '-'; i += 1, index += 1) {
-        if (index >= max_args && enable_max_args == true) {
-            printf("too many arguments for %s option.\n", option);
-            exit(84);
-        }
-    }
-    if (index == 0) {
-        printf("missing value for %s option.\n", option);
-        exit(84);
-    }
 }
 
 void get_port(this_t *this, char *port)
@@ -70,9 +55,11 @@ void get_height(this_t *this, char *height)
     }
 }
 
-void get_teams(this_t *this, char **av, int i)
+void get_teams(this_t *this, char **av)
 {
     int j = 0;
+    int i = 0;
+    for (; av[i] != NULL && my_strcmp(av[i], "-n") != 0; i += 1);
     this->teams_name = malloc(sizeof(char *) * (i + 1));
     for (; av[i + 1] != NULL && av[i + 1][0] != '-'; i += 1, j += 1)
         this->teams_name[j] = strdup(av[i + 1]);
@@ -105,35 +92,8 @@ void get_freq(this_t *this, char *freq)
     }
 }
 
-void get_params(this_t *this, int ac, char **av)
+void set_teams(this_t *this)
 {
-    int err = 0;
-    for (int i = 0; av[i]; i += 1) {
-        if (my_strcmp(av[i], "-p") == 0) {
-            error_params(av, i, 1, "-p", true);
-            get_port(this, av[i + 1]);
-        }
-        if (my_strcmp(av[i], "-x") == 0) {
-            error_params(av, i, 1, "-x", true);
-            get_width(this, av[i + 1]);
-        }
-        if (my_strcmp(av[i], "-y") == 0) {
-            error_params(av, i, 1, "-y", true);
-            get_height(this, av[i + 1]);
-        }
-        if (my_strcmp(av[i], "-n") == 0) {
-            error_params(av, i, 0, "-n", false);
-            get_teams(this, av, i);
-        }
-        if (my_strcmp(av[i], "-c") == 0) {
-            error_params(av, i, 1, "-c", true);
-            get_nb_clients(this, av[i + 1]);
-        }
-        if (my_strcmp(av[i], "-f") == 0) {
-            error_params(av, i, 1, "-f", true);
-            get_freq(this, av[i + 1]);
-        }
-    }
     team_t *team = malloc(sizeof(team_t));
     for (int i = 0; this->teams_name[i]; i += 1) {
         team->name = strdup(this->teams_name[i]);
@@ -141,4 +101,33 @@ void get_params(this_t *this, int ac, char **av)
         team->nb_players = 0;
         this->teams = add_element_team(this->teams, team, 0);
     }
+    if (this->teams == NULL) {
+        display_help();
+        exit(84);
+    }
 }
+
+void get_params(this_t *this, int ac, char **av)
+{
+    for (int opt = 0, opterr = 0; (opt = getopt(ac, av, "p:x:y:n:c:f:")) > 0;) {
+        if (opt == 'p')
+            get_port(this, optarg);
+        if (opt == 'x')
+            get_width(this, optarg);
+        if (opt == 'y')
+            get_height(this, optarg);
+        if (opt == 'n')
+            get_teams(this, av);
+        if (opt == 'c')
+            get_nb_clients(this, optarg);
+        if (opt == 'f')
+            get_freq(this, optarg);
+        if (opt == '?') {
+            display_help();
+            exit(84);
+        }
+    }
+    set_teams(this);
+}
+
+

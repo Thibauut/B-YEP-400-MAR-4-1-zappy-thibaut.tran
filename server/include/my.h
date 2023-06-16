@@ -37,6 +37,7 @@ typedef struct in_addr IN_ADDR;
 #define ADD_TO_QUEUE 0
 #define EXECUTE 1
 
+
 //TEAM
 typedef struct team_s {
     char *name;
@@ -73,6 +74,11 @@ typedef struct vector2d_s {
     int y;
 } vector2d_t;
 
+typedef struct list_vector2d_s {
+    vector2d_t *vector;
+    struct list_vector2d_s *next;
+} list_vector2d_t;
+
 typedef struct player_s {
     bool in_team;
     bool is_gui;
@@ -87,8 +93,7 @@ typedef struct player_s {
     int y;
     enum orientation_e o;
     int life;
-
-    bool incentation;
+    bool incantation;
 } player_t;
 
 typedef struct list_players_s {
@@ -125,6 +130,8 @@ typedef struct this_s {
     //PLAYERS & TEAMS
     list_players_t *players;
     list_teams_t *teams;
+    list_vector2d_t *tiles_pos;
+    list_vector2d_t *players_pos;
 
     //SERVER
     int control_socket;
@@ -161,6 +168,7 @@ struct timeval float_to_timeval(float seconds);
 cmd_ai_t *get_action_by_id(this_t *this, char *uuid);
 cmd_ai_t *create_action_ai(this_t *this, player_t *player, char *cmd, float duration);
 player_t *get_player_by_uuid(this_t *this, char *uuid);
+char *rm_extra_spaces(char *str);
 
 list_players_t *create_cell(player_t *player);
 list_players_t *add_element(list_players_t *list, player_t *player, int pos);
@@ -177,6 +185,12 @@ list_cmd_ai_t *free_first_element_ai(list_cmd_ai_t *list);
 list_cmd_ai_t *free_element_at_ai(list_cmd_ai_t *list, int pos);
 int list_len_ai(list_cmd_ai_t *list);
 
+list_vector2d_t *create_cell_vector(vector2d_t *vector);
+list_vector2d_t *add_element_vector(list_vector2d_t *list, vector2d_t *vector, int pos);
+list_vector2d_t *free_first_element_vector(list_vector2d_t *list);
+list_vector2d_t *free_element_at_vector(list_vector2d_t *list, int pos);
+int list_len_vector(list_vector2d_t *list);
+
 //PARAMS
 void init_params(this_t *this);
 void error_params(char**av, int i, int max_args, char *option, bool enable_max_args);
@@ -191,6 +205,7 @@ void get_params(this_t *this, int ac, char **av);
 void init_zappy_map(this_t *this);
 void refill_map(this_t *this);
 void update_map(this_t *this);
+void handle_borders(this_t *this, player_t *player);
 
 //SERVER
 void init_socket(this_t *this);
@@ -216,6 +231,7 @@ void commands(this_t *this, player_t *player);
 int get_ai_commands(this_t *this, player_t *player);
 int exec_ai_commands(this_t *this, player_t *player, int exec);
 int exec_gui_commands(this_t *this, player_t *player);
+int object_commands(this_t *this, player_t *player, int exec);
 int move_commands(this_t *this, player_t *player, int exec);
 int action_commands(this_t *this, player_t *player, int exec);
 int player_commands(this_t *this, player_t *player, int exec);
@@ -225,7 +241,6 @@ void exec_actions(this_t *this);
 int map_info_gui_commands(this_t *this, player_t *player);
 int player_info_gui_commands(this_t *this, player_t *player);
 int time_info_gui_commands(this_t *this, player_t *player);
-
 void msz(this_t *this, player_t *player);
 void bct(this_t *this, player_t *player);
 void mct(this_t *this, player_t *player);
@@ -236,6 +251,17 @@ void pin(this_t *this, player_t *player);
 void pnw(this_t *this, player_t *player);
 void sgt(this_t *this, player_t *player);
 void sst(this_t *this, player_t *player);
+void send_pdr_to_gui(this_t *this, char *drop_id, int resource);
+
+// EVENTS (GUI)
+void pdi(this_t *this, player_t *player, char *dead_id);
+void send_pdi_to_gui(this_t *this, char *uuid);
+void pdr(this_t *this, player_t *player, char *drop_id, int resource);
+void send_pdr_to_gui(this_t *this, char *drop_id, int resource);
+void pgt(this_t *this, player_t *player, char *take_id, int resource);
+void send_pgt_to_gui(this_t *this, char *take_id, int resource);
+
+
 
 //COMMANDS (AI)
 void inventory(this_t *this, player_t *player, int exec);
@@ -245,3 +271,6 @@ void connect_nbr(this_t *this, player_t *player);
 void right(this_t *this, player_t *player, int exec);
 void left(this_t *this, player_t *player, int exec);
 void forward(this_t *this, player_t *player, int exec);
+void take_object(this_t *this, player_t *player, int exec);
+void set_object(this_t *this, player_t *player, int exec);
+void incantation(this_t *this, player_t *player, int exec);

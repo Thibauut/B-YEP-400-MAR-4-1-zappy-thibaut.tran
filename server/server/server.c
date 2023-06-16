@@ -11,15 +11,19 @@ void update_player_life(this_t *this)
 {
     list_players_t *tmp = this->players;
     for (int index = 0; tmp; tmp = tmp->next, index += 1) {
-        if (tmp->player->life <= 0 && tmp->player->in_team == true && tmp->player->inventory->food <= 0) {
+        if (tmp->player->in_team == true && tmp->player->life <= 0 && tmp->player->inventory->food <= 0) {
+            send_pdi_to_gui(this, tmp->player->id);
             dprintf(tmp->player->socket, "dead\n");
             this->players = free_element_at(this->players, index);
+            this->teams->team->nb_players -= 1;
+            break;
         }
-        if (tmp->player->life <= 0 && tmp->player->in_team == true && tmp->player->inventory->food > 0) {
+        if (tmp->player->in_team == true && tmp->player->life <= 0 && tmp->player->inventory->food > 0) {
             tmp->player->life = 1260 / this->freq;
             tmp->player->inventory->food -= 1;
         }
-        tmp->player->life -= 1;
+        if (tmp->player->in_team == true)
+            tmp->player->life -= 1;
     }
 }
 
