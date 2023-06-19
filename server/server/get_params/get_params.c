@@ -127,6 +127,10 @@ void get_params(this_t *this, int ac, char **av)
             exit(84);
         }
     }
+    if (this->teams_name == NULL) {
+        display_help();
+        exit(84);
+    }
     set_teams(this);
 }
 

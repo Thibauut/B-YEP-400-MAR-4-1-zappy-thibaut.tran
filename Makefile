@@ -5,9 +5,9 @@
 ## Makefile
 ##
 
-SRC_GUI		=	gui/SFML/SFML.cpp			\
-				gui/gui.cpp					\
-				gui/requests/Client.cpp	\
+SRC_GUI		=	gui/SFML/SFML.cpp										\
+				gui/gui.cpp												\
+				gui/requests/Client.cpp									\
 
 SRC_AI 		=	ai/ai.py
 
@@ -41,6 +41,8 @@ SRC_SERVER	=	server/utils/utils.c									\
 				server/server/commands_gui/sgt.c						\
 				server/server/commands_gui/sst.c						\
 				server/server/commands_gui/pin.c						\
+				server/server/commands_gui/events/pic.c					\
+				server/server/commands_gui/events/pie.c					\
 				server/server/commands_gui/events/pnw.c					\
 				server/server/commands_gui/events/pdi.c					\
 				server/server/commands_gui/events/pdr.c					\

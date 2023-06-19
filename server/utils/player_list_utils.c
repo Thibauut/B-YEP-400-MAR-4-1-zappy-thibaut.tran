@@ -74,3 +74,10 @@ list_players_t *free_element_at(list_players_t *list, int pos)
     free(curr);
     return (list);
 }
+
+int list_len(list_players_t *list)
+{
+    int i = 0;
+    for (; list; list = list->next, i += 1);
+    return (i);
+}

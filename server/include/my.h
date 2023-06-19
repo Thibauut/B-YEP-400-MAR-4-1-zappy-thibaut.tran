@@ -173,6 +173,7 @@ char *rm_extra_spaces(char *str);
 list_players_t *create_cell(player_t *player);
 list_players_t *add_element(list_players_t *list, player_t *player, int pos);
 list_players_t *free_element_at(list_players_t *list, int pos);
+int list_len(list_players_t *list);
 
 list_teams_t *create_cell_team(team_t *team);
 list_teams_t *add_element_team(list_teams_t *list, team_t *team, int pos);
@@ -260,6 +261,10 @@ void pdr(this_t *this, player_t *player, char *drop_id, int resource);
 void send_pdr_to_gui(this_t *this, char *drop_id, int resource);
 void pgt(this_t *this, player_t *player, char *take_id, int resource);
 void send_pgt_to_gui(this_t *this, char *take_id, int resource);
+void pic(this_t *this, player_t *player, int x, int y, char *id, list_players_t *list);
+void send_pic_to_gui(this_t *this, int x, int y, char *id, list_players_t *list);
+void pie(this_t *this, player_t *player, int x, int y, char *r);
+void send_pie_to_gui(this_t *this, int x, int y, char *r);
 
 
 
