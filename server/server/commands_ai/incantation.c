@@ -39,7 +39,6 @@ void incantation(this_t *this, player_t *player, int exec)
     }
     int elevation_ritual[7][7] = {{ 1, 1, 0, 0, 0, 0, 0 }, { 2, 1, 1, 1, 0, 0, 0 }, { 2, 2, 0, 1, 0, 2, 0 }, { 4, 1, 1, 2, 0, 1, 0 },
                                 { 4, 1, 2, 1, 3, 0, 0 }, { 6, 1, 2, 3, 0, 1, 0 }, { 6, 2, 2, 2, 2, 2, 1 }};
-
     if (check_material(this, player, elevation_ritual) == 1)
         return;
 
@@ -47,6 +46,5 @@ void incantation(this_t *this, player_t *player, int exec)
         printf("values: %d\n",elevation_ritual[player->level - 1][i]);
     }
 
-        player->inventory->food--;
     dprintf(player->socket, "Elevation underway\n");
 }
