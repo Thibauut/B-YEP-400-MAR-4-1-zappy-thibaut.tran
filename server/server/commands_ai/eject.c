@@ -17,8 +17,6 @@ void eject(this_t *this, player_t *player, int exec)
     dprintf(player->socket, "ok\n");
 }
 
-
-//INCANTATION
 //BROADCAST
 //EJECT
 //EGGS

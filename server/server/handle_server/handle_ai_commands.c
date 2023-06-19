@@ -30,7 +30,7 @@ int get_ai_commands(this_t *this, player_t *player)
 
 int exec_ai_commands(this_t *this, player_t *player, int exec)
 {
-    if (player->in_team == true && player->is_gui == false) {
+    if (player->in_team == true && player->incantation == false && player->is_gui == false) {
         if (move_commands(this, player, exec) == 0)
             return 0;
         if (object_commands(this, player, exec) == 0)

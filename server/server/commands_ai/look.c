@@ -77,7 +77,6 @@ void positions_west(this_t *this, player_t *player)
 
 void get_tiles_positions(this_t *this, player_t *player)
 {
-    printf("%d\n", player->o);
     if (player->o == NORTH) {
         positions_north(this, player);
         return;
@@ -171,5 +170,4 @@ void look(this_t *this, player_t *player, int exec)
     get_tiles_positions(this, player);
     get_players_positions(this, player);
     get_tiles_contents(this, player);
-    dprintf(player->socket, "ok\n");
 }

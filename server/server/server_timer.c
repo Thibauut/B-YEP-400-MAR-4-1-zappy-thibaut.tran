@@ -13,6 +13,6 @@ void server_timer(this_t *this)
     if (!this->timeout->tv_sec && !this->timeout->tv_usec) {
         this->is_start = true;
         this->timeout->tv_sec = res;
-        this->timeout->tv_usec = res * 10000000;
+        this->timeout->tv_usec = res * 1000000;
     }
 }

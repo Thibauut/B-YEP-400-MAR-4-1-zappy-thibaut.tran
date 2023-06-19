@@ -14,7 +14,7 @@ void read_data(this_t *this, player_t *player, int i)
     if ((readValue = read(player->socket, buffer, 1024)) == 0) {
         close(player->socket);
         FD_CLR(player->socket, &this->tmpfds);
-        player->socket = 0;
+        player->socket = -1;
     } else {
         this->cmd = NULL;
         char *tmp = strdup(buffer);

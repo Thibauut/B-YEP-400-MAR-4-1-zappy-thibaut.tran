@@ -27,12 +27,10 @@ int move_commands(this_t *this, player_t *player, int exec)
 int object_commands(this_t *this, player_t *player, int exec)
 {
     if (my_strcmp(this->cmd[0], "Take") == 0 && my_strcmp(this->cmd[1], "object") == 0) {
-        printf("take object\n");
         take_object(this, player, exec);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "Set") == 0 && my_strcmp(this->cmd[1], "object") == 0) {
-        printf("set object\n");
         set_object(this, player, exec);
         return 0;
     }
