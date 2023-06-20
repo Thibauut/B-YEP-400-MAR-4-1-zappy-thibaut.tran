@@ -109,6 +109,36 @@ void get_players_positions(this_t *this, player_t *player)
     }
 }
 
+void print_actual_tile(this_t *this, player_t *player)
+{
+    list_vector2d_t *tmp_tiles = this->tiles_pos;
+    list_vector2d_t *tmp_players = this->players_pos;
+    char *content = malloc(sizeof(char *) * 4096);
+    int count = 0;
+    dprintf(player->socket, "[player");
+    for(; tmp_players; tmp_players = tmp_players->next) {
+        if (player->x == tmp_players->vector->x && player->y == tmp_players->vector->y) {
+            content = my_strcat(content, "player");
+            break;
+        }
+    }
+    for (int i = 0; i < this->map->map[player->y][player->x].food; i++)
+        content = my_strcat(content, " food");
+    for (int i = 0; i < this->map->map[player->y][player->x].linemate; i++)
+        content = my_strcat(content, " linemate");
+    for (int i = 0; i < this->map->map[player->y][player->x].deraumere; i++)
+        content = my_strcat(content, " deraumere");
+    for (int i = 0; i < this->map->map[player->y][player->x].sibur; i++)
+        content = my_strcat(content, " sibur");
+    for (int i = 0; i < this->map->map[player->y][player->x].mendiane; i++)
+        content = my_strcat(content, " mendiane");
+    for (int i = 0; i < this->map->map[player->y][player->x].phiras; i++)
+        content = my_strcat(content, " phiras");
+    for (int i = 0; i < this->map->map[player->y][player->x].thystame; i++)
+        content = my_strcat(content, " thystame");
+    dprintf(player->socket, "%s,", content);
+}
+
 void get_tiles_contents(this_t *this, player_t *player)
 {
     list_vector2d_t *tmp_tiles = this->tiles_pos;
@@ -144,10 +174,10 @@ void get_tiles_contents(this_t *this, player_t *player)
             this->map->map[tmp_tiles->vector->y][tmp_tiles->vector->x].mendiane <= 0 &&
             this->map->map[tmp_tiles->vector->y][tmp_tiles->vector->x].phiras <= 0 &&
             this->map->map[tmp_tiles->vector->y][tmp_tiles->vector->x].thystame <= 0)
-            content[index] = my_strcat(content[index], ",");
+            content[index] = my_strcat(content[index], ", ");
     }
     char *tmp;
-    dprintf(player->socket, "[player,");
+    print_actual_tile(this, player);
     for (int i = 0; content[i]; i++) {
         tmp = rm_extra_spaces(content[i]);
         content[i] = strdup(tmp);
@@ -161,7 +191,7 @@ void get_tiles_contents(this_t *this, player_t *player)
 void look(this_t *this, player_t *player, int exec)
 {
     if (exec == 0) {
-        cmd_ai_t *action = create_action_ai(this, player, "Look", (7 / this->freq));
+        cmd_ai_t *action = create_action_ai(this, player, "Look", 7);
         this->actions = add_element_ai(this->actions, action, list_len_ai(this->actions));
         return;
     }

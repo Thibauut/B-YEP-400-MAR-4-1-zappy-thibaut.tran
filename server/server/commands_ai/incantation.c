@@ -62,8 +62,10 @@ void send_end_incantation(this_t *this, player_t *player)
 {
     list_players_t *tmp = this->players;
     for (; tmp; tmp = tmp->next) {
-        if (tmp->player->x == player->x && tmp->player->y == player->y)
+        if (tmp->player->x == player->x && tmp->player->y == player->y) {
             dprintf(tmp->player->socket, "Current level: %d\n", tmp->player->level);
+            tmp->player->incantation = false;
+        }
     }
 }
 
@@ -87,7 +89,6 @@ int can_incant(this_t *this, player_t *player, int elevation_ritual[7][7], int *
 void send_permission_to_incant(this_t *this, player_t *player)
 {
     list_players_t *tmp = this->players;
-    list_players_t *list = NULL;
     for (; tmp != NULL; tmp = tmp->next) {
         if (tmp->player->x == player->x && tmp->player->y == player->y) {
             dprintf(tmp->player->socket, "Elevation underway\n");
@@ -95,7 +96,6 @@ void send_permission_to_incant(this_t *this, player_t *player)
         }
     }
 }
-
 
 void incantation(this_t *this, player_t *player, int exec)
 {
@@ -105,19 +105,18 @@ void incantation(this_t *this, player_t *player, int exec)
     if (exec == 0) {
         if (can_incant(this, player, elevation_ritual, &nb_players) == 1)
             return;
-        send_permission_to_incant(this, player);
-        cmd_ai_t *action = create_action_ai(this, player, "Incantation", (300 / this->freq));
+        cmd_ai_t *action = create_action_ai(this, player, "Incantation", 300);
         this->actions = add_element_ai(this->actions, action, list_len_ai(this->actions));
+        send_permission_to_incant(this, player);
         create_incantation_events(this, player);
         return;
     }
-    int nb_players2 = 0;
-    if (can_incant(this, player, elevation_ritual, &nb_players2) == 1)
+    if (can_incant(this, player, elevation_ritual, &nb_players) == 1)
         return;
     // level up all players on the tile
     level_up_all_on_tile(this, player);
     // remove material from the tile
     remove_material(this, player, elevation_ritual);
-    send_pie_to_gui(this, player->x, player->y, "ok");
     send_end_incantation(this, player);
+    send_pie_to_gui(this, player->x, player->y, "ok");
 }

@@ -9,7 +9,7 @@
 
 int object_to_set_food(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "food") == 0) {
         player->inventory->food -= 1;
         if (player->inventory->food <= 0) {
@@ -24,7 +24,7 @@ int object_to_set_food(this_t *this, player_t *player)
 
 int object_to_set_linemate(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "linemate") == 0) {
         player->inventory->linemate -= 1;
         if (player->inventory->linemate <= 0) {
@@ -39,7 +39,7 @@ int object_to_set_linemate(this_t *this, player_t *player)
 
 int objet_to_set_deraumere(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "deraumere") == 0) {
         player->inventory->deraumere -= 1;
         if (player->inventory->deraumere <= 0) {
@@ -54,7 +54,7 @@ int objet_to_set_deraumere(this_t *this, player_t *player)
 
 int object_to_set_sibur(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "sibur") == 0) {
         player->inventory->sibur -= 1;
         if (player->inventory->sibur <= 0) {
@@ -69,7 +69,7 @@ int object_to_set_sibur(this_t *this, player_t *player)
 
 int object_to_set_mendiane(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "mendiane") == 0) {
         player->inventory->mendiane -= 1;
         if (player->inventory->mendiane <= 0) {
@@ -84,7 +84,7 @@ int object_to_set_mendiane(this_t *this, player_t *player)
 
 int object_to_set_phiras(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "phiras") == 0) {
         player->inventory->phiras -= 1;
         if (player->inventory->phiras <= 0) {
@@ -99,7 +99,7 @@ int object_to_set_phiras(this_t *this, player_t *player)
 
 int object_to_set_thystame(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "thystame") == 0) {
         player->inventory->thystame -= 1;
         if (player->inventory->thystame <= 0) {
@@ -115,11 +115,11 @@ int object_to_set_thystame(this_t *this, player_t *player)
 void set_object(this_t *this, player_t *player, int exec)
 {
     if (exec == 0) {
-        cmd_ai_t *action = create_action_ai(this, player, "Set object", (7 / this->freq));
+        cmd_ai_t *action = create_action_ai(this, player, "Set", 7);
         this->actions = add_element_ai(this->actions, action, list_len_ai(this->actions));
         return;
     }
-    if (this->cmd[2] == NULL) {
+    if (this->cmd[1] == NULL) {
         dprintf(player->socket, "ko\n");
         return;
     }

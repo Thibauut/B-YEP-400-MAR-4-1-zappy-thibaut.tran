@@ -9,10 +9,10 @@
 
 void server_timer(this_t *this)
 {
-    double res = (double)1.0 / (double)this->freq;
+    double res = (double)1 / (double)this->freq;
     if (!this->timeout->tv_sec && !this->timeout->tv_usec) {
         this->is_start = true;
         this->timeout->tv_sec = res;
-        this->timeout->tv_usec = res * 1000000;
+        this->timeout->tv_usec = res * 2000000;
     }
 }

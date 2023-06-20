@@ -9,7 +9,7 @@
 
 int object_to_take_food(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "food") == 0) {
         if (this->map->map[player->y][player->x].food <= 0) {
             dprintf(player->socket, "ko\n");
@@ -24,7 +24,7 @@ int object_to_take_food(this_t *this, player_t *player)
 
 int object_to_take_linemate(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "linemate") == 0) {
         if (this->map->map[player->y][player->x].linemate <= 0) {
             dprintf(player->socket, "ko\n");
@@ -39,7 +39,7 @@ int object_to_take_linemate(this_t *this, player_t *player)
 
 int objet_to_take_deraumere(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "deraumere") == 0) {
         if (this->map->map[player->y][player->x].deraumere <= 0) {
             dprintf(player->socket, "ko\n");
@@ -54,7 +54,7 @@ int objet_to_take_deraumere(this_t *this, player_t *player)
 
 int object_to_take_sibur(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "sibur") == 0) {
         if (this->map->map[player->y][player->x].sibur <= 0) {
             dprintf(player->socket, "ko\n");
@@ -69,7 +69,7 @@ int object_to_take_sibur(this_t *this, player_t *player)
 
 int object_to_take_mendiane(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "mendiane") == 0) {
         if (this->map->map[player->y][player->x].mendiane <= 0) {
             dprintf(player->socket, "ko\n");
@@ -84,7 +84,7 @@ int object_to_take_mendiane(this_t *this, player_t *player)
 
 int object_to_take_phiras(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "phiras") == 0) {
         if (this->map->map[player->y][player->x].phiras <= 0) {
             dprintf(player->socket, "ko\n");
@@ -99,7 +99,7 @@ int object_to_take_phiras(this_t *this, player_t *player)
 
 int object_to_take_thystame(this_t *this, player_t *player)
 {
-    char *obj = strdup(this->cmd[2]);
+    char *obj = strdup(this->cmd[1]);
     if (my_strcmp(obj, "thystame") == 0) {
         if (this->map->map[player->y][player->x].thystame <= 0) {
             dprintf(player->socket, "ko\n");
@@ -115,11 +115,11 @@ int object_to_take_thystame(this_t *this, player_t *player)
 void take_object(this_t *this, player_t *player, int exec)
 {
     if (exec == 0) {
-        cmd_ai_t *action = create_action_ai(this, player, "Take object", (7 / this->freq));
+        cmd_ai_t *action = create_action_ai(this, player, "Take", 7);
         this->actions = add_element_ai(this->actions, action, list_len_ai(this->actions));
         return;
     }
-    if (this->cmd[2] == NULL) {
+    if (this->cmd[1] == NULL) {
         dprintf(player->socket, "ko\n");
         return;
     }

@@ -41,7 +41,6 @@ void server_loop(this_t *this)
         server_timer(this);
         this->tmpfds = this->readfds;
         add_player_to_set(this);
-
         _activity = select(this->maxfd + 1, &this->tmpfds, NULL, NULL, this->timeout);
         select_error(this, _activity);
         handle_new_connection(this);
