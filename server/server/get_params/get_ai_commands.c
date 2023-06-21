@@ -61,13 +61,12 @@ int player_commands(this_t *this, player_t *player, int exec)
         return 0;
     }
     if (my_strcmp(this->cmd[0], "Fork") == 0) {
-        // fork(this, player);
+        fork_egg(this, player, exec);
         return 0;
     }
     if (my_strcmp(this->cmd[0], "Eject") == 0) {
-        // eject(this, player);
+        eject(this, player, exec);
         return 0;
     }
     return 1;
 }
-

@@ -12,7 +12,8 @@ void init_params(this_t *this)
     this->port = 4242;
     this->width = 10;
     this->height = 10;
-    this->nb_clients = 0;
+    this->nb_clients = 3;
+    this->nb_clients_egg = 0;
     this->freq = 100;
 }
 

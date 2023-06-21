@@ -30,7 +30,7 @@ void set_direction_left(player_t *player, int orientation)
 void left(this_t *this, player_t *player, int exec)
 {
     if (exec == 0) {
-        cmd_ai_t *action = create_action_ai(this, player, "Left", 7);
+        cmd_ai_t *action = create_action_ai(this, player, "Left", NULL, 7);
         this->actions = add_element_ai(this->actions, action, list_len_ai(this->actions));
         return;
     }

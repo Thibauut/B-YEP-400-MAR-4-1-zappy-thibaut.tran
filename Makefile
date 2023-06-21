@@ -15,6 +15,7 @@ SRC_SERVER	=	server/utils/utils.c									\
 				server/utils/player_list_utils.c						\
 				server/utils/team_list_utils.c							\
 				server/utils/ai_cmd_list_utils.c						\
+				server/utils/eggs_list_utils.c							\
 				server/utils/look_list_utils.c							\
 				server/utils/display_help.c								\
 				server/server/get_params/get_params.c					\
@@ -42,11 +43,15 @@ SRC_SERVER	=	server/utils/utils.c									\
 				server/server/commands_gui/sst.c						\
 				server/server/commands_gui/pin.c						\
 				server/server/commands_gui/events/pic.c					\
+				server/server/commands_gui/events/pex.c					\
 				server/server/commands_gui/events/pie.c					\
 				server/server/commands_gui/events/pnw.c					\
 				server/server/commands_gui/events/pdi.c					\
 				server/server/commands_gui/events/pdr.c					\
 				server/server/commands_gui/events/pgt.c					\
+				server/server/commands_gui/events/pfk.c					\
+				server/server/commands_gui/events/enw.c					\
+				server/server/commands_gui/events/ebo.c					\
 				server/server/commands_ai/inventory.c					\
 				server/server/commands_ai/look.c						\
 				server/server/commands_ai/connect_nbr.c					\

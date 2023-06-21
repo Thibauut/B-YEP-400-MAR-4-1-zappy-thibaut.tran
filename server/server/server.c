@@ -10,12 +10,24 @@
 void update_player_life(this_t *this)
 {
     list_players_t *tmp = this->players;
+    list_teams_t *tmp_teams = this->teams;
+    list_cmd_ai_t *tmp_cmd = this->actions;
     for (int index = 0; tmp; tmp = tmp->next, index += 1) {
         if (tmp->player->in_team == true && tmp->player->life <= 0 && tmp->player->inventory->food <= 0) {
             send_pdi_to_gui(this, tmp->player->id);
             dprintf(tmp->player->socket, "dead\n");
+            close(tmp->player->socket);
+            for (int i = 0; tmp_cmd; tmp_cmd = tmp_cmd->next, i += 1) {
+                if (my_strcmp(tmp_cmd->action->uuid, tmp->player->id) == 0)
+                    this->actions = free_element_at_ai(this->actions, i);
+            }
+            for (; tmp_teams; tmp_teams = tmp_teams->next) {
+                if (my_strcmp(tmp_teams->team->name, tmp->player->team->name) == 0) {
+                    tmp_teams->team->nb_players -= 1;
+                    break;
+                }
+            }
             this->players = free_element_at(this->players, index);
-            this->teams->team->nb_players -= 1;
             break;
         }
         if (tmp->player->in_team == true && tmp->player->life <= 0 && tmp->player->inventory->food > 0) {
@@ -45,7 +57,6 @@ void server_loop(this_t *this)
         select_error(this, _activity);
         handle_new_connection(this);
         data_from_player(this);
-
         if (this->is_start == true) {
             exec_actions(this);
             update_map(this);

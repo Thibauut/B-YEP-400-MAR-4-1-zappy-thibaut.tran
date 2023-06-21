@@ -20,13 +20,13 @@ void mct(this_t *this, player_t *player)
             "\t\t{\n\t\t\t\"x\": %d,\n\t\t\t\"y\": %d,\n\t\t\t\"food\": %d,\n\t\t\t\"linemate\": %d,\n\t\t\t\"deraumere\": %d,\n\t\t\t\"sibur\": %d,\n\t\t\t\"mendiane\": %d,\n\t\t\t\"phiras\": %d,\n\t\t\t\"thystame\": %d\n\t\t}",
             x,
             y,
-            this->map->map[y][x].food,
-            this->map->map[y][x].linemate,
-            this->map->map[y][x].deraumere,
-            this->map->map[y][x].sibur,
-            this->map->map[y][x].mendiane,
-            this->map->map[y][x].phiras,
-            this->map->map[y][x].thystame);
+            this->map->map[y][x]->food,
+            this->map->map[y][x]->linemate,
+            this->map->map[y][x]->deraumere,
+            this->map->map[y][x]->sibur,
+            this->map->map[y][x]->mendiane,
+            this->map->map[y][x]->phiras,
+            this->map->map[y][x]->thystame);
             if (x != this->width - 1 || y != this->height - 1)
                 dprintf(player->socket, ",\n");
         }

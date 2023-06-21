@@ -37,6 +37,12 @@ typedef struct in_addr IN_ADDR;
 #define ADD_TO_QUEUE 0
 #define EXECUTE 1
 
+enum orientation_e {
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
+};
 
 //TEAM
 typedef struct team_s {
@@ -51,14 +57,7 @@ typedef struct list_teams_s {
     struct list_teams_s *next;
 } list_teams_t;
 
-enum orientation_e {
-    NORTH,
-    EAST,
-    SOUTH,
-    WEST
-};
-
-//PLAYER
+//INVENTORY
 typedef struct inventory_s {
     int food;
     int linemate;
@@ -68,6 +67,31 @@ typedef struct inventory_s {
     int phiras;
     int thystame;
 } inventory_t;
+
+
+//EGG
+typedef struct	egg_s
+{
+    bool in_team;
+    bool is_gui;
+    int socket;
+    team_t *team;
+
+    inventory_t *inventory;
+    char *id;
+    int level;
+    int x;
+    int y;
+    enum orientation_e o;
+    int life;
+    bool incantation;
+    char *uuid_creator;
+} egg_t;
+
+typedef struct list_eggs_s {
+    egg_t *egg;
+    struct list_eggs_s *next;
+} list_eggs_t;
 
 typedef struct vector2d_s {
     int x;
@@ -104,7 +128,7 @@ typedef struct list_players_s {
 //COMMAND AI
 typedef struct cmd_ai_s {
     char *uuid;
-    char *cmd;
+    char **cmd;
     float duration;
 } cmd_ai_t;
 
@@ -121,17 +145,19 @@ typedef struct this_s {
     int width;
     int height;
     int nb_clients;
+    int nb_clients_egg;
     int freq;
     char **teams_name;
     struct timeval *timeout;
     int refill_map_timer;
     bool is_start;
 
-    //PLAYERS & TEAMS
+    //PLAYERS & TEAMS & EGGS
     list_players_t *players;
     list_teams_t *teams;
     list_vector2d_t *tiles_pos;
     list_vector2d_t *players_pos;
+    list_eggs_t *eggs;
 
     //SERVER
     int control_socket;
@@ -166,9 +192,10 @@ void display_help(void);
 char *get_unique_uuid(void);
 struct timeval float_to_timeval(float seconds);
 cmd_ai_t *get_action_by_id(this_t *this, char *uuid);
-cmd_ai_t *create_action_ai(this_t *this, player_t *player, char *cmd, float duration);
+cmd_ai_t *create_action_ai(this_t *this, player_t *player, char *cmd, char *arg, float duration);
 player_t *get_player_by_uuid(this_t *this, char *uuid);
 char *rm_extra_spaces(char *str);
+void update_pos(this_t *this, int *x, int *y);
 
 list_players_t *create_cell(player_t *player);
 list_players_t *add_element(list_players_t *list, player_t *player, int pos);
@@ -191,6 +218,13 @@ list_vector2d_t *add_element_vector(list_vector2d_t *list, vector2d_t *vector, i
 list_vector2d_t *free_first_element_vector(list_vector2d_t *list);
 list_vector2d_t *free_element_at_vector(list_vector2d_t *list, int pos);
 int list_len_vector(list_vector2d_t *list);
+
+list_eggs_t *create_cell_egg(egg_t *egg);
+list_eggs_t *add_element_egg(list_eggs_t *list, egg_t *egg, int pos);
+list_eggs_t *free_first_element_egg(list_eggs_t *list);
+list_eggs_t *free_element_at_egg(list_eggs_t *list, int pos);
+int list_len_egg(list_eggs_t *list);
+egg_t *get_element_egg(list_eggs_t *list, int pos);
 
 //PARAMS
 void init_params(this_t *this);
@@ -265,7 +299,14 @@ void pic(this_t *this, player_t *player, int x, int y, char *id, list_players_t 
 void send_pic_to_gui(this_t *this, int x, int y, char *id, list_players_t *list);
 void pie(this_t *this, player_t *player, int x, int y, char *r);
 void send_pie_to_gui(this_t *this, int x, int y, char *r);
-
+void pex(this_t *this, player_t *player, char *player_id);
+void send_pex_to_gui(this_t *this, char *uuid);
+void pfk(this_t *this, player_t *player, char *uuid);
+void send_pfk_to_gui(this_t *this, char *uuid);
+void enw(this_t *this, player_t *player, egg_t *egg);
+void send_enw_to_gui(this_t *this, player_t *player, egg_t *egg);
+void ebo(this_t *this, player_t *player, char *uuid);
+void send_ebo_to_gui(this_t *this, char *uuid);
 
 
 //COMMANDS (AI)
@@ -279,3 +320,5 @@ void forward(this_t *this, player_t *player, int exec);
 void take_object(this_t *this, player_t *player, int exec);
 void set_object(this_t *this, player_t *player, int exec);
 void incantation(this_t *this, player_t *player, int exec);
+void eject(this_t *this, player_t *player, int exec);
+void fork_egg(this_t *this, player_t *player, int exec);

@@ -7,11 +7,16 @@
 
 #include "../../include/my.h"
 
-cmd_ai_t *create_action_ai(this_t *this, player_t *player, char *cmd, float duration)
+cmd_ai_t *create_action_ai(this_t *this, player_t *player, char *cmd, char *arg, float duration)
 {
     cmd_ai_t *new_action = malloc(sizeof(cmd_ai_t));
-    new_action->cmd = strdup(cmd);
-    new_action->duration = duration / this->freq;
+    new_action->cmd = malloc(sizeof(char *) * 3);
+    new_action->cmd[0] = strdup(cmd);
+    if (arg != NULL)
+        new_action->cmd[1] = strdup(arg);
+    else
+        new_action->cmd[1] = NULL;
+    new_action->duration = duration / (float)this->freq;
     new_action->uuid = player->id;
     return (new_action);
 }
@@ -38,6 +43,8 @@ int exec_ai_commands(this_t *this, player_t *player, int exec)
             return 0;
         }
     }
+    // if (this->cmd[0] != NULL || this->cmd[1] != NULL && exec == EXECUTE)
+    //     printf("AI exec: %s %s\n", this->cmd[0], this->cmd[1]);
     if (player->in_team == true && (player->incantation == false) && player->is_gui == false) {
         if (move_commands(this, player, exec) == 0)
             return 0;

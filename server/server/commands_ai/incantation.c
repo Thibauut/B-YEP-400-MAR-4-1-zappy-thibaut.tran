@@ -9,12 +9,12 @@
 
 int check_material(this_t *this, player_t *player, int elevation_ritual[7][7], int *nb_players)
 {
-    if (this->map->map[player->y][player->x].linemate < elevation_ritual[player->level - 1][1] ||
-    this->map->map[player->y][player->x].deraumere < elevation_ritual[player->level - 1][2] ||
-    this->map->map[player->y][player->x].sibur < elevation_ritual[player->level - 1][3] ||
-    this->map->map[player->y][player->x].mendiane < elevation_ritual[player->level - 1][4] ||
-    this->map->map[player->y][player->x].phiras < elevation_ritual[player->level - 1][5] ||
-    this->map->map[player->y][player->x].thystame < elevation_ritual[player->level - 1][6]) {
+    if (this->map->map[player->y][player->x]->linemate < elevation_ritual[player->level - 1][1] ||
+    this->map->map[player->y][player->x]->deraumere < elevation_ritual[player->level - 1][2] ||
+    this->map->map[player->y][player->x]->sibur < elevation_ritual[player->level - 1][3] ||
+    this->map->map[player->y][player->x]->mendiane < elevation_ritual[player->level - 1][4] ||
+    this->map->map[player->y][player->x]->phiras < elevation_ritual[player->level - 1][5] ||
+    this->map->map[player->y][player->x]->thystame < elevation_ritual[player->level - 1][6]) {
         return 1;
     }
     list_players_t *tmp = this->players;
@@ -39,12 +39,12 @@ void level_up_all_on_tile(this_t *this, player_t *player)
 
 void remove_material(this_t *this, player_t *player, int elevation_ritual[7][7])
 {
-    this->map->map[player->y][player->x].linemate -= elevation_ritual[player->level - 1][1];
-    this->map->map[player->y][player->x].deraumere -= elevation_ritual[player->level - 1][2];
-    this->map->map[player->y][player->x].sibur -= elevation_ritual[player->level - 1][3];
-    this->map->map[player->y][player->x].mendiane -= elevation_ritual[player->level - 1][4];
-    this->map->map[player->y][player->x].phiras -= elevation_ritual[player->level - 1][5];
-    this->map->map[player->y][player->x].thystame -= elevation_ritual[player->level - 1][6];
+    this->map->map[player->y][player->x]->linemate -= elevation_ritual[player->level - 1][1];
+    this->map->map[player->y][player->x]->deraumere -= elevation_ritual[player->level - 1][2];
+    this->map->map[player->y][player->x]->sibur -= elevation_ritual[player->level - 1][3];
+    this->map->map[player->y][player->x]->mendiane -= elevation_ritual[player->level - 1][4];
+    this->map->map[player->y][player->x]->phiras -= elevation_ritual[player->level - 1][5];
+    this->map->map[player->y][player->x]->thystame -= elevation_ritual[player->level - 1][6];
 }
 
 void create_incantation_events(this_t *this, player_t *player)
@@ -105,7 +105,7 @@ void incantation(this_t *this, player_t *player, int exec)
     if (exec == 0) {
         if (can_incant(this, player, elevation_ritual, &nb_players) == 1)
             return;
-        cmd_ai_t *action = create_action_ai(this, player, "Incantation", 300);
+        cmd_ai_t *action = create_action_ai(this, player, "Incantation", NULL, 300);
         this->actions = add_element_ai(this->actions, action, list_len_ai(this->actions));
         send_permission_to_incant(this, player);
         create_incantation_events(this, player);

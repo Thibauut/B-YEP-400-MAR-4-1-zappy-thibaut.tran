@@ -9,11 +9,11 @@
 
 void init_density(this_t *this)
 {
-    this->map->food_density = 0.5;
-    this->map->linemate_density = 0.3;
-    this->map->deraumere_density = 0.15;
-    this->map->sibur_density = 0.1;
-    this->map->mendiane_density = 0.1;
+    this->map->food_density = 2.0;
+    this->map->linemate_density = 1;
+    this->map->deraumere_density = 1;
+    this->map->sibur_density = 1;
+    this->map->mendiane_density = 1;
     this->map->phiras_density = 0.08;
     this->map->thystame_density = 0.05;
 }
@@ -35,19 +35,19 @@ void pop_ressources(this_t *this, int max, int nb, enum ressources_e ressource)
         rand_x = rand() % this->width;
         rand_y = rand() % this->height;
         if (ressource == FOOD)
-            this->map->map[rand_y][rand_x].food++;
+            this->map->map[rand_y][rand_x]->food++;
         if (ressource == LINEMATE)
-            this->map->map[rand_y][rand_x].linemate++;
+            this->map->map[rand_y][rand_x]->linemate++;
         if (ressource == DERAUMERE)
-            this->map->map[rand_y][rand_x].deraumere++;
+            this->map->map[rand_y][rand_x]->deraumere++;
         if (ressource == SIBUR)
-            this->map->map[rand_y][rand_x].sibur++;
+            this->map->map[rand_y][rand_x]->sibur++;
         if (ressource == MENDIANE)
-            this->map->map[rand_y][rand_x].mendiane++;
+            this->map->map[rand_y][rand_x]->mendiane++;
         if (ressource == PHIRAS)
-            this->map->map[rand_y][rand_x].phiras++;
+            this->map->map[rand_y][rand_x]->phiras++;
         if (ressource == THYSTAME)
-            this->map->map[rand_y][rand_x].thystame++;
+            this->map->map[rand_y][rand_x]->thystame++;
     }
 }
 
@@ -68,17 +68,18 @@ void init_zappy_map(this_t *this)
     init_density(this);
     init_max_ressources(this);
     int y = 0, x = 0;
-    this->map->map = malloc(sizeof(tile_t *) * this->height + 1);
+    this->map->map = malloc(sizeof(tile_t **) * this->height + 1);
     for (; y < this->height; y++) {
-        this->map->map[y] = malloc(sizeof(tile_t) * this->width + 1);
+        this->map->map[y] = malloc(sizeof(tile_t *) * this->width + 1);
         for (x = 0; x < this->width; x++) {
-            this->map->map[y][x].food = 0;
-            this->map->map[y][x].linemate = 0;
-            this->map->map[y][x].deraumere = 0;
-            this->map->map[y][x].sibur = 0;
-            this->map->map[y][x].mendiane = 0;
-            this->map->map[y][x].phiras = 0;
-            this->map->map[y][x].thystame = 0;
+            this->map->map[y][x] = malloc(sizeof(tile_t));
+            this->map->map[y][x]->food = 0;
+            this->map->map[y][x]->linemate = 0;
+            this->map->map[y][x]->deraumere = 0;
+            this->map->map[y][x]->sibur = 0;
+            this->map->map[y][x]->mendiane = 0;
+            this->map->map[y][x]->phiras = 0;
+            this->map->map[y][x]->thystame = 0;
         }
     }
     this->map->map[y] = NULL;
@@ -91,19 +92,19 @@ int get_max_ressources(this_t *this, enum ressources_e type)
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
             if (type == FOOD)
-                max += this->map->map[y][x].food;
+                max += this->map->map[y][x]->food;
             if (type == LINEMATE)
-                max += this->map->map[y][x].linemate;
+                max += this->map->map[y][x]->linemate;
             if (type == DERAUMERE)
-                max += this->map->map[y][x].deraumere;
+                max += this->map->map[y][x]->deraumere;
             if (type == SIBUR)
-                max += this->map->map[y][x].sibur;
+                max += this->map->map[y][x]->sibur;
             if (type == MENDIANE)
-                max += this->map->map[y][x].mendiane;
+                max += this->map->map[y][x]->mendiane;
             if (type == PHIRAS)
-                max += this->map->map[y][x].phiras;
+                max += this->map->map[y][x]->phiras;
             if (type == THYSTAME)
-                max += this->map->map[y][x].thystame;
+                max += this->map->map[y][x]->thystame;
         }
     }
     return (max);

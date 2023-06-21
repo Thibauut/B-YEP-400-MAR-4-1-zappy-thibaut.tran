@@ -45,7 +45,7 @@ typedef struct map_s {
     int max_thystame;
 
     enum ressources_e ressources[7];
-    tile_t **map;
+    tile_t ***map;
 
 } map_t;
 
