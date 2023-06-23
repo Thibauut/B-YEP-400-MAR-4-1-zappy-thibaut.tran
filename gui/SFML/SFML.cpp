@@ -36,7 +36,6 @@ void SFML::runWindow()
             if (event.type == sf::Event::Closed)
                 _window->close();
         }
-        glClear(GL_COLOR_BUFFER_BIT);
     }
 }
 

@@ -25,6 +25,7 @@ class Client {
 
         // bool sendRequestExec();
         void sendRequest(const std::string& commande);
+        void sendRequestId(const std::string& commande, std::string value);
         // bool catchResponseExec();
         std::string catchResponse();
     private:

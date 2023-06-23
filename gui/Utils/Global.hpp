@@ -8,7 +8,19 @@
 #pragma once
 
 #include <string>
+#include <raylib.h>
+#include <vector>
+#include <mutex>
+#include <cstdlib>
+#include <ctime>
+#include <thread>
 
-int port;
-std::string ip;
-int width_map, height_map;
+extern int port;
+extern std::string ip;
+extern int width_map;
+extern int height_map;
+extern const int screenWidth;
+extern const int screenHeight;
+extern bool canHover;
+extern bool isDrawingBox;
+
