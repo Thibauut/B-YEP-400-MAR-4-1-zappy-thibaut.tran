@@ -5,9 +5,21 @@
 ## Makefile
 ##
 
-SRC_GUI		=	gui/SFML/SFML.cpp										\
-				gui/gui.cpp												\
-				gui/requests/Client.cpp									\
+SRC_GUI		=	gui/requests/Client.cpp				\
+				gui/items/AItem.cpp					\
+				gui/tile/Tile.cpp					\
+				gui/Utils/Global.cpp				\
+				gui/Map/Map.cpp						\
+				gui/screens/LoadingScreen.cpp		\
+				gui/Player/Player.cpp				\
+				gui/Player/Egg.cpp					\
+				gui/Scene/Scene.cpp					\
+				gui/Anim/AnimRaylib.cpp				\
+				gui/Anim/Anim.cpp					\
+				gui/screens/BoxInfo.cpp				\
+				gui/Map/Cursor.cpp					\
+				gui/Bar/BarTime.cpp					\
+				gui/requests/ActionQueue.cpp		\
 
 SRC_AI 		=	ai/ai.py
 
@@ -42,6 +54,7 @@ SRC_SERVER	=	server/utils/utils.c									\
 				server/server/commands_gui/sgt.c						\
 				server/server/commands_gui/sst.c						\
 				server/server/commands_gui/pin.c						\
+				server/server/commands_gui/events/pbc.c					\
 				server/server/commands_gui/events/pic.c					\
 				server/server/commands_gui/events/pex.c					\
 				server/server/commands_gui/events/pie.c					\
@@ -53,6 +66,7 @@ SRC_SERVER	=	server/utils/utils.c									\
 				server/server/commands_gui/events/enw.c					\
 				server/server/commands_gui/events/ebo.c					\
 				server/server/commands_ai/inventory.c					\
+				server/server/commands_ai/broadcast.c					\
 				server/server/commands_ai/look.c						\
 				server/server/commands_ai/connect_nbr.c					\
 				server/server/commands_ai/forward.c						\
@@ -61,9 +75,9 @@ SRC_SERVER	=	server/utils/utils.c									\
 				server/server/commands_ai/take_object.c					\
 				server/server/commands_ai/set_object.c					\
 				server/server/commands_ai/eject.c						\
-				server/server/commands_ai/broadcast.c					\
 				server/server/commands_ai/fork.c						\
 				server/server/commands_ai/incantation.c					\
+				server/server/commands_gui/events/edi.c					\
 				server/main.c
 
 NAME_GUI	=	zappy_gui
@@ -87,9 +101,9 @@ ai_:
 	@chmod 777 $(NAME_AI)
 
 server_:
-	@gcc	-o $(NAME_SERVER) $(SRC_SERVER) -g3 -std=gnu17	-luuid -lpthread
+	@gcc	-o $(NAME_SERVER) $(SRC_SERVER) -g3 -std=gnu17	-luuid
 
 gui_:
-	@g++	-o $(NAME_GUI) $(SRC_GUI) -std=c++11 -Wall -lGL -lGLU -lglut -lGLEW -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system
+	@g++ -pthread -o $(NAME_GUI) gui/gui.cpp $(SRC_GUI) -Wall -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system -lassimp
 
 re: fclean all

@@ -47,6 +47,10 @@ class Mendiane : public AItem {
             return _texture;
         };
 
+        int getId() const {
+            return 4;
+        }
+
     private:
         std::string _name;
         Vector2 _position;

@@ -9,6 +9,7 @@
 #include <string>
 #include <raylib.h>
 #include "../Utils/Global.hpp"
+#include "../Anim/Anim.hpp"
 
 class Player {
     public:
@@ -28,13 +29,17 @@ class Player {
         void setLevel(int level);
         int getLevel() const;
 
+
+        void isIncanting(bool isIncanting);
+
         Rectangle getSettings() const;
+
         Rectangle getAnim() const;
 
         // void setInventory(std::vector<AItem>);
         // std::vector<AItem> getInventory() const;
 
-        void draw(Texture texture);
+        void draw(Texture texture, Texture2D incantation);
 
     private:
         std::string _id;
@@ -44,5 +49,8 @@ class Player {
         Rectangle _anim;
         Rectangle _settings;
         Texture2D _player;
+
+        bool _isIncanting;
+        Anim _incantation;
         // std::vector<AItem> _inventory;
 };

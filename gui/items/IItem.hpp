@@ -19,4 +19,5 @@ class IItem {
         virtual Vector2 getItemPosition() const = 0;
         virtual std::string getName() const = 0;
         virtual Texture2D getTexture() const = 0;
+        virtual int getId() const = 0;
 };

@@ -42,6 +42,10 @@ class Food : public AItem {
             return _texture;
         };
 
+        int getId() const {
+            return 0;
+        }
+
     private:
         std::string _name;
         Vector2 _position;

@@ -47,6 +47,10 @@ class Thystame : public AItem {
             return _texture;
         };
 
+        int getId() const {
+            return 6;
+        }
+
     private:
         std::string _name;
         Vector2 _position;

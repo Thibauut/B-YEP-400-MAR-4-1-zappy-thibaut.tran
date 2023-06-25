@@ -48,9 +48,12 @@ class Linemate : public AItem {
             return _texture;
         };
 
+        int getId() const {
+            return 1;
+        }
+
     private:
         std::string _name;
         Vector2 _position;
         Texture2D _texture;
-        Anim _anim;
 };

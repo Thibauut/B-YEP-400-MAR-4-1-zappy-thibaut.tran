@@ -11,13 +11,15 @@ Anim::Anim()
 {
 }
 
-Anim::Anim(Rectangle frameRec, int speed, Vector2 position)
+Anim::Anim(Rectangle frameRec, int speed, Vector2 position, int maxFrames, float scale)
 {
     _frameRec = frameRec;
     _framesSpeed = speed;
     _framesCounter = 0;
     _currentFrame = 0;
     _position = position;
+    _maxFrames = maxFrames;
+    _settings = {position.x, position.y, scale, scale};
 }
 
 Anim::~Anim()
@@ -26,17 +28,23 @@ Anim::~Anim()
 
 void Anim::draw(Texture2D texture)
 {
-    DrawTextureRec(texture, _frameRec, _position, WHITE);
+    DrawTexturePro(texture, _frameRec, _settings, Vector2{0, 0}, 0, WHITE);
+}
+
+void Anim::setPosition(Vector2 position)
+{
+    _position = position;
+    _settings.x = _position.x;
+    _settings.y = _position.y;
 }
 
 void Anim::update()
 {
     _framesCounter++;
-    if (_framesCounter >= (GetFrameTime()/_framesSpeed))
-    {
+    if (_framesCounter >= (GetFrameTime()/_framesSpeed)) {
         _framesCounter = 0;
         _currentFrame++;
-        // if (_currentFrame > 7) _currentFrame = 0;
-        // _frameRec.x = (float)_currentFrame*(float)scarfy.width/6;
+        if (_currentFrame >= _maxFrames) _currentFrame = 0;
+        _frameRec.x = _frameRec.x + _frameRec.width;
     }
 }

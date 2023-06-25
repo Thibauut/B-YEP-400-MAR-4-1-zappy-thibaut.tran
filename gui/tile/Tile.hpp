@@ -22,12 +22,14 @@ class Tile {
         // Setters
         void setTilePosition(Vector2 position);
         void setTileItems(std::vector<AItem*> items);
-        void CheckTileHover(BoxInfo& boxInfo);
+        void CheckTileHover(BoxInfo& boxInfo, Camera2D camera);
 
         // Getters
         Vector2 getTilePosition() const;
         std::vector<AItem*> getTileItems() const;
         void setTexture(Texture2D &texture);
+
+        void removeItem(int item);
 
     private:
         Vector2 _position;

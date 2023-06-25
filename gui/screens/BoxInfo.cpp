@@ -27,6 +27,6 @@ void BoxInfo::draw()
     DrawTextureEx(_box, position, 0.0f, 1.0f, WHITE);
     for (size_t i = 0; i < _items.size(); i++) {
         Vector2 position = (Vector2) {(float) (i * 70), (float) (1080 - 200)};
-        DrawTextureEx(_items[i]->getTexture(), position, 0.0f, 2.5f, WHITE);
+        DrawTextureEx(_items.at(i)->getTexture(), position, 0.0f, 2.5f, WHITE);
     }
 }

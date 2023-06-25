@@ -47,6 +47,10 @@ class Phiras : public AItem {
             return _texture;
         };
 
+        int getId() const {
+            return 5;
+        }
+
     private:
         std::string _name;
         Vector2 _position;

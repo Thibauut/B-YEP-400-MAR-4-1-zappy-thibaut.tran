@@ -26,12 +26,12 @@ void Map::drawMap()
     int renderIndex = 0;
     // std::cout << "SizeHERE: " << _map.size() << std::endl;
     for (size_t i = 0; i < _map.size(); i++) {
-        _map[i].drawTile(startX, startY, spriteSpacingX, spriteSpacingY, renderIndex);
+        _map.at(i).drawTile(startX, startY, spriteSpacingX, spriteSpacingY, renderIndex);
         renderIndex++;
     }
     renderIndex = 0;
     for (size_t i = 0; i < _map.size(); i++) {
-        _map[i].drawTiles(renderIndex);
+        _map.at(i).drawTiles(renderIndex);
         renderIndex++;
     }
 }

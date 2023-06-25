@@ -20,10 +20,10 @@ class AItem : public IItem {
         virtual Vector2 getItemPosition() const;
         virtual std::string getName() const;
         virtual Texture2D getTexture() const;
+        virtual int getId() const;
 
     private:
         std::string _name;
         Vector2 _position;
         Texture2D _texture;
-        // Anim _anim;
 };

@@ -50,3 +50,8 @@ Texture2D AItem::getTexture() const
 {
     return _texture;
 }
+
+int AItem::getId() const
+{
+    return 0;
+}

@@ -47,6 +47,10 @@ class Sibur : public AItem {
             return _texture;
         };
 
+        int getId() const {
+            return 3;
+        }
+
     private:
         std::string _name;
         Vector2 _position;

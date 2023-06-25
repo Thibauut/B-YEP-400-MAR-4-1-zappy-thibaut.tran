@@ -9,18 +9,19 @@
 
 #include "../Utils/Global.hpp"
 
-class TimeBar {
+class Bar {
     public:
-        TimeBar();
-        ~TimeBar();
+        Bar();
+        ~Bar();
 
-        void init();
+        void init(Vector2 position);
         void draw();
-        void setTime(int time);
+        void setValue(int time);
         void checkMouseClick();
+        bool isEnabled();
 
         int _tmpTime;
-        int _time;
+        int _value;
     private:
         Vector2 _backgroundPosition;
         Texture2D _background;

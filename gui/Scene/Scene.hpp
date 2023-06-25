@@ -6,7 +6,7 @@
 */
 
 #pragma once
-#include "../Player/Player.hpp"
+#include "../Player/Egg.hpp"
 #include <vector>
 #include <mutex>
 #include "../Utils/Global.hpp"
@@ -19,18 +19,32 @@ class Scene {
         std::vector <Player> getPlayers();
         void setPlayers(std::vector<Player> players);
         void addPlayer(Player &player);
-        void removePlayer(Player &player);
-        void drawPlayers(Texture2D model);
+        void removePlayer(int pos);
+        void drawPlayers(Texture2D model, Texture2D incantation);
+        void setPositionPlayer(std::string id, Vector2 position);
+        void setOrientationPlayer(std::string id, int orientation);
+        void setLevelPlayer(std::string id, int level);
+        void isIncantingPlayer(std::string id, bool isIncanting);
+        int getPlayerById(std::string id) const;
+
+        std::vector<Egg> getEggs();
+        void setEggs(std::vector<Egg> eggs);
+        void addEgg(Egg &egg);
+        void removeEgg(int eggPos);
+        void drawEggs(Texture2D model);
+        void setPositionEgg(std::string id, Vector2 position);
+        int getEggById(std::string id) const;
 
         void setBase(Texture2D base);
         Texture2D getBase() const;
         void drawBase() const;
 
-        int getPlayerById(std::string id) const;
 
     private:
         std::vector<Player> _players;
-        std::mutex _mutex;
+        std::vector<Egg> _eggs;
+        std::mutex _mutexPlayer;
+        std::mutex _mutexEgg;
         Texture _base;
 
 };

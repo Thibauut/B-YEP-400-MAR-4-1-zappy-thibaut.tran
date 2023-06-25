@@ -21,8 +21,8 @@ Tile::Tile(Vector2 position, std::vector<AItem*> items, int currentTile)
     _texture = LoadTexture(path.c_str());
     _isHovered = false;
     _currentTile = currentTile;
-    _rec.x = (screenWidth / 2) + (_currentTile % width_map) * (60 / 2) - (_currentTile / width_map) * (60 / 2);
-    _rec.y = (_currentTile % height_map) * (50 / 2) + (_currentTile / height_map) * (50 / 2);
+    _rec.x = (screenWidth / 2) + (_currentTile % (width_map)) * (60 / 2) - (_currentTile / (width_map)) * (60 / 2);
+    _rec.y = (_currentTile % (height_map)) * (50 / 2) + (_currentTile / (height_map)) * (50 / 2);
     _rec.width = 130 / 2;
     _rec.height = 130 / 2;
 }
@@ -32,8 +32,8 @@ Tile::~Tile()
 
 void Tile::drawTile(int startX, int startY, int spriteSpacingX, int spriteSpacingY, int renderIndex)
 {
-    float posX = startX + (renderIndex % width_map) * spriteSpacingX - (renderIndex / width_map) * spriteSpacingX;
-    float posY = startY + (renderIndex % height_map) * spriteSpacingY + (renderIndex / height_map) * spriteSpacingY;
+    float posX = startX + (renderIndex % (width_map)) * spriteSpacingX - (renderIndex / (width_map)) * spriteSpacingX;
+    float posY = startY + (renderIndex % (height_map)) * spriteSpacingY + (renderIndex / (height_map)) * spriteSpacingY;
     Vector2 pos = {posX, posY};
     if (_isHovered) {
         pos.y -= 10;
@@ -44,12 +44,17 @@ void Tile::drawTile(int startX, int startY, int spriteSpacingX, int spriteSpacin
     // drawTiles(renderIndex);
 }
 
-void Tile::CheckTileHover(BoxInfo &boxInfo)
+void Tile::CheckTileHover(BoxInfo &boxInfo, Camera2D camera)
 {
-    if (CheckCollisionPointRec(GetMousePosition(), _rec) && canHover == true) {
+    Vector2 mouse = GetMousePosition();
+    mouse.x /= camera.zoom;
+    mouse.y /= camera.zoom;
+    mouse.x -= camera.offset.x;
+    mouse.y -= camera.offset.y;
+    if (CheckCollisionPointRec(mouse, _rec) && canHover == true) {
         _isHovered = true;
         canHover = false;
-    } else if (!CheckCollisionPointRec(GetMousePosition(), _rec) && _isHovered == true) {
+    } else if (!CheckCollisionPointRec(mouse, _rec) && _isHovered == true) {
         _isHovered = false;
         canHover = true;
     }
@@ -70,13 +75,23 @@ void Tile::drawTiles(int renderIndex)
 {
     for (auto &item : _items) {
         Vector2 pos;
-        pos.x = (screenWidth / 2) + (renderIndex % width_map) * (60 / 2) - (renderIndex / width_map) * (60 / 2);
-        pos.y = (renderIndex % height_map) * (50 / 2) + (renderIndex / height_map) * (50 / 2);
+        pos.x = (screenWidth / 2) + (renderIndex % (width_map)) * (60 / 2) - (renderIndex / (width_map)) * (60 / 2);
+        pos.y = (renderIndex % (height_map)) * (50 / 2) + (renderIndex / (height_map)) * (50 / 2);
         if (_isHovered) {
             pos.y -= 10;
         }
         item->setItemPosition(pos);
         item->drawItem();
+    }
+}
+
+void Tile::removeItem(int item)
+{
+    for (size_t i = 0; i < _items.size(); i++) {
+        if (_items.at(i)->getId() == item) {
+            _items.erase(_items.begin() + i);
+            return;
+        }
     }
 }
 

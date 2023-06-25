@@ -47,8 +47,13 @@ class Deraumere : public AItem {
             return _texture;
         };
 
+        int getId() const {
+            return 2;
+        }
+
     private:
         std::string _name;
         Vector2 _position;
         Texture2D _texture;
+        int _id;
 };

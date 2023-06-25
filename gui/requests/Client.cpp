@@ -26,12 +26,36 @@ Client::Client(const std::string& ip, int port)
         std::cerr << "Erreur lors de la connexion au serveur." << std::endl;
         exit(1);
     }
+    // int flags = fcntl(socketId, F_GETFL, 0);
+    // fcntl(socketId, F_SETFL, flags | O_NONBLOCK);
+    std::string response = catchResponse();
+    std::cout << "response: " << response << std::endl;
+    sendRequest("GUI\n");
+    catchResponse();
+}
+
+void Client::init(const std::string& ip, int port)
+{
+    socketId = socket(AF_INET, SOCK_STREAM, 0);
+    if (socketId == -1) {
+        std::cerr << "Erreur lors de la création du socket." << std::endl;
+        exit(1);
+    }
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_port = htons(port);
+    if (inet_pton(AF_INET, ip.c_str(), &(serverAddress.sin_addr)) <= 0) {
+        std::cerr << "Adresse IP invalide ou non prise en charge." << std::endl;
+        exit(1);
+    }
+    if (connect(socketId, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) < 0) {
+        std::cerr << "Erreur lors de la connexion au serveur." << std::endl;
+        exit(1);
+    }
     int flags = fcntl(socketId, F_GETFL, 0);
     fcntl(socketId, F_SETFL, flags | O_NONBLOCK);
     std::string response = catchResponse();
     std::cout << "response: " << response << std::endl;
     sendRequest("GUI\n");
-    catchResponse();
 }
 
 Client::~Client()
@@ -56,6 +80,30 @@ void Client::sendRequestId(const std::string& commande, std::string value)
     }
 }
 
+size_t checkNumberOfReccurence(std::string str, std::string find)
+{
+    int count = 0;
+    size_t nPos = str.find(find, 0);
+    while (nPos != std::string::npos) {
+        count++;
+        nPos = str.find(find, nPos + 1);
+    }
+
+    return count;
+}
+
+void Client::parseResponse(const std::string& response)
+{
+    std::string finalResponse;
+    std::size_t startPos = 0;
+    std::size_t endPos;
+    while ((endPos = response.find("\n}", startPos)) != std::string::npos) {
+        std::string jsonObject = response.substr(startPos, endPos - startPos + 2);
+        _actionQueue.push(jsonObject);
+        startPos = endPos + 2;
+    }
+}
+
 std::string Client::catchResponse()
 {
     fd_set readSet;
@@ -63,7 +111,7 @@ std::string Client::catchResponse()
     FD_SET(socketId, &readSet);
 
     struct timeval timeout;
-    timeout.tv_sec = 5;
+    timeout.tv_sec = 1;
     timeout.tv_usec = 0;
 
     if (select(socketId + 1, &readSet, NULL, NULL, &timeout) < 0) {
@@ -77,7 +125,34 @@ std::string Client::catchResponse()
             std::cerr << "Erreur lors de la réception de la réponse." << std::endl;
             exit(1);
         }
+        parseResponse(std::string(buffer));
+        return std::string(buffer);
+    } else {
+        return "";
+    }
+}
 
+std::string Client::catchResponseAnexe()
+{
+    fd_set readSet;
+    FD_ZERO(&readSet);
+    FD_SET(socketId, &readSet);
+
+    // struct timeval timeout;
+    // timeout.tv_sec = 1;
+    // timeout.tv_usec = 0;
+
+    if (select(socketId + 1, &readSet, NULL, NULL, NULL) < 0) {
+        std::cerr << "Erreur lors de l'attente de la réponse." << std::endl;
+        exit(1);
+    }
+
+    if (FD_ISSET(socketId, &readSet)) {
+        char buffer[1024] = {0};
+        if (recv(socketId, buffer, sizeof(buffer), 0) < 0) {
+            std::cerr << "Erreur lors de la réception de la réponse." << std::endl;
+            exit(1);
+        }
         return std::string(buffer);
     } else {
         return "";
