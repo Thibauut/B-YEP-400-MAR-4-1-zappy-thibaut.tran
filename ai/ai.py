@@ -16,14 +16,15 @@ import random
 
 
 class MyClient():
-    def __init__(self, argv):
+    def __init__(self):
         self.cmd = ""
-        self.port = int(argv[2])
+        self.port = int(sys.argv[2])
         self.ip = 'localhost'
-        self.team = argv[4]
+        self.team = sys.argv[4]
         self.connected = False
-        if len(argv) == 7:
-            self.ip = str(argv[6])
+        if len(sys.argv) == 7:
+            self.ip = str(sys.argv[6])
+        self.launch()
 
     def connect_to_server(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -46,21 +47,23 @@ class MyClient():
             self.sock.close()
             exit(0)
 
-    def wait_for_data(self):
-        my_thread = threading.Thread(target=self.receive_data_from_server)
-        my_thread.start()
-        my_thread.join()
-
-
     def receive_data_from_server(self):
-        self.data = self.sock.recv(1024)
+        try:
+            self.data = self.sock.recv(1024)
+        except:
+                print("Died at level", self.ai.level)
+                self.sock.close()
+                exit(0)
         print(self.data.decode(), end="")
 
     def handle_data(self):
         self.send_team()
-        while self.data.decode() != "dead\n":
+        while True:
             self.ai.run(self)
-        print(" Died at level", self.ai.level)
+
+    def launch(self):
+        self.connect_to_server()
+        self.handle_data()
 
 
 class MyAI():
@@ -71,37 +74,69 @@ class MyAI():
         self.level = 1
         self.rotation = 0
         self.nb = 0
+        self.nbFork = 0
         self.parser(data)
-        self.items_to_gather = [{'item': 'food', 'quantity': 12}, {'item': 'linemate', 'quantity':1}] , [{'item': 'food', 'quantity': 12}, {'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1}, {'item': 'sibur', 'quantity':1},] , [{'item': 'food', 'quantity': 12}, {'item': 'linemate', 'quantity':2}, {'item': 'sibur', 'quantity':1}, {'item': 'phiras', 'quantity':1}]
+        self.items_to_gather = [{'item': 'food', 'quantity': 12}, {'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':1}], [{'item': 'food', 'quantity': 12}, {'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1}, {'item': 'sibur', 'quantity':1},], [{'item': 'food', 'quantity': 12}, {'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':2}, {'item': 'sibur', 'quantity':1}], [{'item': 'food', 'quantity': 12}, {'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1},{'item': 'sibur', 'quantity':2}]
+        self.items_to_lvl = [{'item': 'linemate', 'quantity':1}], [{'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1}, {'item': 'sibur', 'quantity':1},], [{'item': 'linemate', 'quantity':2}, {'item': 'sibur', 'quantity':1}, {'item': 'phiras', 'quantity':2}], [{'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1},{'item': 'sibur', 'quantity':2}, {'item': 'phiras', 'quantity':1}]
+
 
     def run(self, client):
-        self.handle_inventory(client)
-        time.sleep(0.5)
-        self.food = self.get_item("food")
-        time.sleep(0.5)
-        self.recon(client)
-        time.sleep(0.5)
-        if self.food < 7:
-            self.go_to_item(client, 'food')
+        client.ai.handle_inventory(client)
+        client.ai.recon(client)
+        if client.ai.get_item('food') < 10:
+            if self.look[0].count('player') < 2:
+                for item in client.ai.items_to_gather[self.level - 1]:
+                    if client.ai.check_item(item['item'], 0) > 0:
+                        client.ai.take_item(client, item['item'])
+            client.ai.go_to_item(client, 'food')
         else:
-            if self.check_item('food', 0) > 0 and self.food < 12 :
-                self.take_item(client, 'food')
-            time.sleep(0.5)
-            self.gather_to_lvl_up(client)
-            time.sleep(0.5)
-            self.incantation(client)
-            time.sleep(0.5)
-            self.fork(client)
+            for _ in range(client.ai.check_item('food', 0)):
+                client.ai.take_item(client, 'food')
+            client.ai.incantation(client)
+            client.ai.check_item_floor(client)
+            if self.look[0].count('player') < 2:
+                client.ai.gather_to_lvl_up(client)
+            client.ai.fork(client)
+            # print('Level', ' '*self.level, client.ai.level)
+            # if (self.level == 3):
+            #     print("*********************************************")
+            #     missing_objs = []
+
+            #     # AFFICHAGE
+            #     print("Level 3 : missing :")
+                    
+            #     # CE QUE J'AI
+            #     print("Objects in my possession :")
+            #     for obj in self.inventory:
+            #         print(obj['item'])
+
+            #     # CE QU'IL ME FAUT
+            #     print("Required objects :")
+            #     for obj_require in self.items_to_gather[self.level - 1]:
+            #         print(obj_require['item'])
+            #         missing_objs.append(obj_require['item'] + ":" + str(obj_require['quantity'] - self.get_item(obj_require['item'])))
+
+            #     for obj in self.inventory:
+            #         for obj_require in self.items_to_gather[self.level - 1]:
+            #             if (obj['item'] == obj_require['item'] and obj_require['quantity'] - obj['quantity'] <= 0) or obj['item'] == 'food':
+            #                 try:
+            #                     missing_objs.remove(obj['item'])
+            #                 except:
+            #                     continue
+                
+            #     print("Missing objects :", missing_objs)
+            #     print("*********************************************")
+
 
     def handle_inventory(self, client):
         client.send_command_to_server("Inventory\n")
-        client.wait_for_data()
+        client.receive_data_from_server()
         if client.cmd == "Inventory\n":
             client.ai.get_inventory(client.data.decode())
 
     def recon(self, client):
         client.send_command_to_server("Look\n")
-        client.wait_for_data()
+        client.receive_data_from_server()
         if client.cmd == "Look\n":
             client.ai.get_look(client.data.decode())
 
@@ -110,6 +145,24 @@ class MyAI():
             return self.look[pos].count(item)
         return 0
 
+    def check_item_floor(self, client):
+        items_needed = 0
+        valid_items = 0
+        for _ in self.items_to_lvl[self.level - 1]:
+            items_needed += 1
+        for item in self.items_to_lvl[self.level - 1]:
+            quantityhave = self.check_item(item['item'], 0)
+            quantityreq = item['quantity']
+            if quantityhave >= quantityreq:
+                valid_items += 1
+        if (valid_items == items_needed):
+            client.send_command_to_server("Incantation\n")
+            client.receive_data_from_server()
+            client.receive_data_from_server()
+            self.get_level(client)
+            # if self.level > 2:
+            #     client.receive_data_from_server()
+
 
     def parser(self, data):
         data_parts = data.split()
@@ -117,7 +170,6 @@ class MyAI():
             self.ClientNB = int(data_parts[0])
             self.MapX = int(data_parts[1])
             self.MapY = int(data_parts[2])
-        self.nb = (1 - self.ClientNB) * (-1)
 
     def get_inventory(self, data):
         self.inventory = []
@@ -182,41 +234,48 @@ class MyAI():
                 self.move(client, "Forward")
                 self.take_item(client, item)
             else:
-                self.move(client, "Right")
+                direction = random.randint(0, 2)
+                if direction == 0:
+                    self.move(client, "Left")
+                elif direction == 1:
+                    self.move(client, "Forward")
+                else:
+                    self.move(client, "Right")
         except:
             return
 
     def gather_to_lvl_up(self, client):
-        for n in self.items_to_gather[self.level - 1]:
-            if (n["quantity"] > self.get_item(n['item'])):
-                self.go_to_item(client, n['item'])
+        for item in self.items_to_gather[self.level - 1]:
+            if (item['quantity'] > self.get_item(item['item'])):
+                self.go_to_item(client, item['item'])
+                self.recon(client)
 
     def move(self, client, direction):
         client.send_command_to_server(direction + "\n")
-        client.wait_for_data()
+        client.receive_data_from_server()
 
     def take_item(self, client, item_to_take):
         client.send_command_to_server(f"Take {item_to_take}\n")
-        client.wait_for_data()
+        client.receive_data_from_server()
 
     def connect_nbr(self, client):
         client.send_command_to_server("Connect_nbr\n")
-        client.wait_for_data()
+        client.receive_data_from_server()
         nb = client.data.decode().split("\n")[0]
         self.ClientNB = int(nb)
 
     def fork(self, client):
         try:
             self.connect_nbr(client)
-            time.sleep(0.1)
         except:
             return
         if self.ClientNB != 0:
-            # print("Fork")
-            # client.send_command_to_server("Fork\n")
-            # client.wait_for_data()
+        #     client.send_command_to_server("Fork\n")
+        #     client.receive_data_from_server()
         # else:
-            subprocess.Popen(["./zappy_ai", "-p", str(client.port), "-n", client.team, "-h", client.ip])
+            thread = threading.Thread(target=MyClient)
+            thread.start()
+        # subprocess.Popen(["./zappy_ai", "-p", str(client.port), "-n", client.team, "-h", client.ip])
 
 
     def incantation(self, client):
@@ -232,102 +291,277 @@ class MyAI():
         self.level5(client)
 
     def level2(self, client):
-        if self.level == 1 and self.linemate >= 1:
-            client.send_command_to_server("Set linemate\n")
-            client.wait_for_data()
+        if self.level == 1 and (self.linemate >= 1 or self.check_item('linemate', 0) >= 1):
+            if self.check_item('linemate', 0) < 1:
+                client.send_command_to_server("Set linemate\n")
+                client.receive_data_from_server()
             client.send_command_to_server("Incantation\n")
-            client.wait_for_data()
+            client.receive_data_from_server()
             if (client.data.decode() != "ko\n"):
-                client.wait_for_data()
+                client.receive_data_from_server()
                 self.get_level(client)
 
     def level3(self, client):
         if (
             self.level == 2 and
             self.look[0].count('player') >= 2 and
-            self.linemate >= 1 and
-            self.deraumere >= 1 and
-            self.sibur >= 1
+            (self.linemate >= 1 or self.check_item('linemate', 0) >= 1) and
+            (self.deraumere >= 1 or self.check_item('deraumere', 0) >= 1) and
+            (self.sibur >= 1 or self.check_item('sibur', 0) >= 1)
         ):
-            client.send_command_to_server("Set linemate\n")
-            client.wait_for_data()
-            client.send_command_to_server("Set deraumere\n")
-            client.wait_for_data()
-            client.send_command_to_server("Set sibur\n")
-            client.wait_for_data()
+            if self.check_item('linemate', 0) < 1 :
+                client.send_command_to_server("Set linemate\n")
+                client.receive_data_from_server()
+            if self.check_item('deraumere', 0) < 1:
+                client.send_command_to_server("Set deraumere\n")
+                client.receive_data_from_server()
+            if self.check_item('sibur', 0) < 1:
+                client.send_command_to_server("Set sibur\n")
+                client.receive_data_from_server()
             client.send_command_to_server("Incantation\n")
-            client.wait_for_data()
+            client.receive_data_from_server()
             if (client.data.decode() != "ko\n"):
-                client.wait_for_data()
-                client.wait_for_data()
                 self.get_level(client)
-                client.wait_for_data()
+                client.receive_data_from_server()
 
     def level4(self, client):
         if (
             self.level == 3 and
             self.look[0].count('player') >= 2 and
-            self.linemate >= 2 and
-            self.phiras >= 2 and
-            self.sibur >= 1
+            (self.linemate >= 2 or self.check_item('linemate', 0) >= 2) and
+            (self.phiras >= 2 or self.check_item('phiras', 0) >= 2) and
+            (self.sibur >= 1 or self.check_item('sibur', 0) >= 1)
         ):
-            client.send_command_to_server("Set linemate\n")
-            client.wait_for_data()
-            client.send_command_to_server("Set linemate\n")
-            client.wait_for_data()
-            client.send_command_to_server("Set phiras\n")
-            client.wait_for_data()
-            client.send_command_to_server("Set phiras\n")
-            client.wait_for_data()
-            client.send_command_to_server("Set sibur\n")
-            client.wait_for_data()
+            print("|||||||LEVEL4 INCOMING|||||||||||")
+            print("|||||||LEVEL4 INCOMING|||||||||||")
+            print("|||||||LEVEL4 INCOMING|||||||||||")
+            print("|||||||LEVEL4 INCOMING|||||||||||")
+            print("|||||||LEVEL4 INCOMING|||||||||||")
+            print("|||||||LEVEL4 INCOMING|||||||||||")
+            print("|||||||LEVEL4 INCOMING|||||||||||")
+            print("|||||||LEVEL4 INCOMING|||||||||||")
+            if self.check_item('linemate', 0) < 2:
+                client.send_command_to_server("Set linemate\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set linemate\n")
+                client.receive_data_from_server()
+            if self.check_item('phiras', 0) < 2:
+                client.send_command_to_server("Set phiras\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set phiras\n")
+                client.receive_data_from_server()
+            if self.check_item('sibur', 0) < 1:
+                client.send_command_to_server("Set sibur\n")
+                client.receive_data_from_server()
             client.send_command_to_server("Incantation\n")
-            client.wait_for_data()
-            if (client.data.decode() != "ko\n"):
-                client.wait_for_data()
-                if (client.data.decode() != "ko\n"):
-                    self.get_level(client)
-                    client.wait_for_data()
+            client.receive_data_from_server()
             print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
+
+            if (client.data.decode() != "ko\n"):
+                client.receive_data_from_server()
+                self.get_level(client)
+                print("*********************************************JE SUIS NIVEAU 4**********************************************")
+                print("*********************************************JE SUIS NIVEAU 4**********************************************")
+                print("*********************************************JE SUIS NIVEAU 4**********************************************")
+                print("*********************************************JE SUIS NIVEAU 4**********************************************")
+                print("*********************************************JE SUIS NIVEAU 4**********************************************")
+                print("*********************************************JE SUIS NIVEAU 4**********************************************")
+                print("*********************************************JE SUIS NIVEAU 4**********************************************")
+
+                if (client.data.decode() != "ko\n"):
+                    client.receive_data_from_server()
 
     def level5(self, client):
         if (
             self.level == 4 and
             self.look[0].count('player') >= 4 and
-            self.linemate >= 1 and
-            self.deraumere >= 1 and
-            self.phiras >= 1 and
-            self.sibur >= 2
+            (self.linemate >= 1 or self.check_item('linemate', 0) >= 1) and
+            (self.deraumere >= 1 or self.check_item('deraumere', 0) >= 1) and
+            (self.phiras >= 1 or self.check_item('phiras', 0) >= 1) and
+            (self.sibur >= 2 or self.check_item('sibur', 0) >= 2)
         ):
-            client.send_command_to_server("Set linemate\n")
-            client.wait_for_data()
-            client.send_command_to_server("Set linemate\n")
-            client.wait_for_data()
-            client.send_command_to_server("Set phiras\n")
-            client.wait_for_data()
-            client.send_command_to_server("Set phiras\n")
-            client.wait_for_data()
-            client.send_command_to_server("Set sibur\n")
-            client.wait_for_data()
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            if self.check_item('linemate', 0) < 2:
+                client.send_command_to_server("Set linemate\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set linemate\n")
+                client.receive_data_from_server()
+            if self.check_item('deraumere', 0) < 1:
+                client.send_command_to_server("Set deraumere\n")
+                client.receive_data_from_server()
+            if self.check_item('phiras', 0) < 2:
+                client.send_command_to_server("Set phiras\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set phiras\n")
+                client.receive_data_from_server()
+            if self.check_item('sibur', 0) < 1:
+                client.send_command_to_server("Set sibur\n")
+                client.receive_data_from_server()
             client.send_command_to_server("Incantation\n")
-            client.wait_for_data()
+            client.receive_data_from_server()
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
+            print("|||||||LEVEL5 INCOMING|||||||||||")
             if (client.data.decode() != "ko\n"):
-                client.wait_for_data()
+                client.receive_data_from_server()
+                self.get_level(client)
+                print("*********************************************JE SUIS NIVEAU 5**********************************************")
+                print("*********************************************JE SUIS NIVEAU 5**********************************************")
+                print("*********************************************JE SUIS NIVEAU 5**********************************************")
+                print("*********************************************JE SUIS NIVEAU 5**********************************************")
+                print("*********************************************JE SUIS NIVEAU 5**********************************************")
+                print("*********************************************JE SUIS NIVEAU 5**********************************************")
+                print("*********************************************JE SUIS NIVEAU 5**********************************************")
+
+
+    def level6(self, client):
+        if (
+            self.level == 5 and
+            self.look[0].count('player') >= 4 and
+            self.linemate >= 1 and
+            self.deraumere >= 2 and
+            self.sibur >= 1 and
+            self.mendiane >= 3
+        ):
+            if self.check_item('linemate', 0) < 1:
+                client.send_command_to_server("Set linemate\n")
+                client.receive_data_from_server()
+            if self.check_item('deraumere', 0) < 2:
+                client.send_command_to_server("Set deraumere\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set deraumere\n")
+                client.receive_data_from_server()
+            if self.check_item('sibur', 0) < 1:
+                client.send_command_to_server("Set sibur\n")
+                client.receive_data_from_server()
+            if self.check_item('mendiane', 0) < 3:
+                client.send_command_to_server("Set mendiane\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set mendiane\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set mendiane\n")
+                client.receive_data_from_server()
+            client.send_command_to_server("Incantation\n")
+            client.receive_data_from_server()
+            if (client.data.decode() != "ko\n"):
+                client.receive_data_from_server()
+                self.get_level(client)
                 if (client.data.decode() != "ko\n"):
-                    self.get_level(client)
-                    client.wait_for_data()
+                    client.receive_data_from_server()
+
+    def level7(self, client):
+        if (
+            self.level == 6 and
+            self.look[0].count('player') >= 6 and
+            self.linemate >= 1 and
+            self.deraumere >= 2 and
+            self.sibur >= 3 and
+            self.phiras >= 1
+        ):
+            if self.check_item('linemate', 0) < 1:
+                client.send_command_to_server("Set linemate\n")
+                client.receive_data_from_server()
+            if self.check_item('deraumere', 0) < 2:
+                client.send_command_to_server("Set deraumere\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set deraumere\n")
+                client.receive_data_from_server()
+            if self.check_item('sibur', 0) < 3:
+                client.send_command_to_server("Set sibur\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set sibur\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set sibur\n")
+                client.receive_data_from_server()
+            if self.check_item('phiras', 0) < 1:
+                client.send_command_to_server("Set phiras\n")
+                client.receive_data_from_server()
+            client.send_command_to_server("Incantation\n")
+            client.receive_data_from_server()
+            if (client.data.decode() != "ko\n"):
+                client.receive_data_from_server()
+                self.get_level(client)
+                if (client.data.decode() != "ko\n"):
+                    client.receive_data_from_server()
+
+    def level8(self, client):
+        if (
+            self.level == 7 and
+            self.look[0].count('player') >= 6 and
+            self.linemate >= 2 and
+            self.deraumere >= 2 and
+            self.sibur >= 2 and
+            self.mendiane >= 2 and
+            self.phiras >= 2 and
+            self.thystame >= 1
+        ):
+            if self.check_item('linemate', 0) < 2:
+                client.send_command_to_server("Set linemate\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set linemate\n")
+                client.receive_data_from_server()
+            if self.check_item('deraumere', 0) < 2:
+                client.send_command_to_server("Set deraumere\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set deraumere\n")
+                client.receive_data_from_server()
+            if self.check_item('sibur', 0) < 2:
+                client.send_command_to_server("Set sibur\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set sibur\n")
+                client.receive_data_from_server()
+            if self.check_item('mendiane', 0) < 2:
+                client.send_command_to_server("Set mendiane\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set mendiane\n")
+                client.receive_data_from_server()
+            if self.check_item('phiras', 0) < 2:
+                client.send_command_to_server("Set phiras\n")
+                client.receive_data_from_server()
+                client.send_command_to_server("Set phiras\n")
+                client.receive_data_from_server()
+            if self.check_item('thystame', 0 < 1):
+                client.send_command_to_server("Set thystame\n")
+                client.receive_data_from_server()
+            client.send_command_to_server("Incantation\n")
+            client.receive_data_from_server()
+            if (client.data.decode() != "ko\n"):
+                client.receive_data_from_server()
+                self.get_level(client)
+                if (client.data.decode() != "ko\n"):
+                    client.receive_data_from_server()
+
 
 
 def main():
     if len(sys.argv) == 5 or len(sys.argv) == 7:
-        try:
-            client = MyClient(sys.argv)
-        except Exception as e:
-            print(e)
-            exit(84)
-        client.connect_to_server()
-        client.handle_data()
-        client.sock.close()
+        # try:
+        thread = threading.Thread(target=MyClient)
+        # except Exception as e:
+        #     print(e)
+        #     exit(84)
+        thread.start()
+        thread.join()
         return 0
     else:
         exit(84)
