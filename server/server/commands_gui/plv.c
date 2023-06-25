@@ -16,7 +16,7 @@ void plv(this_t *this, player_t *player)
     list_players_t *tmp = this->players;
     for (; tmp != NULL; tmp = tmp->next) {
         if (my_strcmp(tmp->player->id, this->cmd[1]) == 0 && tmp->player->in_team == true) {
-            dprintf(player->socket, "{\n\t\"id\": \"%s\",\n\t\"level\": %d\n}\n",
+            dprintf(player->socket, "{\n\t\"cmd\": \"plv\",\n\t\"id\": \"%s\",\n\t\"level\": %d\n}\n",
             tmp->player->id,
             tmp->player->level);
             return;

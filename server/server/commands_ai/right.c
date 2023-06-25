@@ -18,13 +18,14 @@ void set_direction_right(player_t *player, int orientation)
         return;
     }
     if (orientation == SOUTH) {
-        player->o = WEST;
+        player->o = EAST;
         return;
     }
     if (orientation == EAST) {
-        player->o = SOUTH;
+        player->o = NORTH;
         return;
     }
+
 }
 
 void right(this_t *this, player_t *player, int exec)

@@ -93,21 +93,6 @@ void get_freq(this_t *this, char *freq)
     }
 }
 
-void set_teams(this_t *this)
-{
-    team_t *team = malloc(sizeof(team_t));
-    for (int i = 0; this->teams_name[i]; i += 1) {
-        team->name = strdup(this->teams_name[i]);
-        team->max_players = this->nb_clients;
-        team->nb_players = 0;
-        this->teams = add_element_team(this->teams, team, 0);
-    }
-    if (this->teams == NULL) {
-        display_help();
-        exit(84);
-    }
-}
-
 void get_params(this_t *this, int ac, char **av)
 {
     for (int opt = 0, opterr = 0; (opt = getopt(ac, av, "p:x:y:n:c:f:")) > 0;) {
@@ -132,7 +117,6 @@ void get_params(this_t *this, int ac, char **av)
         display_help();
         exit(84);
     }
-    set_teams(this);
 }
 
 

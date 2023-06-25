@@ -24,6 +24,7 @@ void exec_actions(this_t *this)
         }
         tmp->action->duration -= 1;
     }
+    free(tmp);
 }
 
 void commands(this_t *this, player_t *player)

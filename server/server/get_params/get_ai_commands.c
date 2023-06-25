@@ -51,6 +51,10 @@ int action_commands(this_t *this, player_t *player, int exec)
         incantation(this, player, exec);
         return 0;
     }
+    if (my_strcmp(this->cmd[0], "Broadcast") == 0) {
+        broadcast(this, player, exec);
+        return 0;
+    }
     return 1;
 }
 

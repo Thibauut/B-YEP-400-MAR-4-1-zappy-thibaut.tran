@@ -13,12 +13,19 @@ void tna(this_t *this, player_t *player)
         dprintf(player->socket, "ko\n");
         return;
     }
-    dprintf(player->socket, "{\n\t\"teams\": [\n");
+    char *response = malloc(sizeof(char) * 4096);
+    response[0] = '\0';
+    response = my_strcat(response, "{\n\t\"cmd\": \"tna\",\n\t\"teams\": [\n");
+
     list_teams_t *tmp = this->teams;
     for (; tmp != NULL; tmp = tmp->next) {
-        dprintf(player->socket, "\t\t{\n\t\t\t\"name\": \"%s\"\n\t\t}", tmp->team->name);
-        if (tmp->next != NULL)
-            dprintf(player->socket, ",\n");
+        response = my_strcat(response, "\t\t{\n\t\t\t\"name\": \"");
+        response = my_strcat(response, tmp->team->name);
+        response = my_strcat(response, "\"\n\t\t}");
+        if (tmp->next != NULL) {
+            response = my_strcat(response, ",\n");
+        }
     }
-    dprintf(player->socket, "\n\t]\n}\n");
+    response = my_strcat(response, "\n\t]\n}");
+    dprintf(player->socket, "%s\n", response);
 }

@@ -18,4 +18,8 @@ void init_zappy_teams(this_t *this)
         newteam->players_id = NULL;
         this->teams = add_element_team(this->teams, newteam, list_len_team(this->teams));
     }
+    if (this->teams == NULL) {
+        display_help();
+        exit(84);
+    }
 }

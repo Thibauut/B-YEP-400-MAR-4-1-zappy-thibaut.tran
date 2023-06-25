@@ -13,5 +13,5 @@ void sgt(this_t *this, player_t *player)
         dprintf(player->socket, "ko\n");
         return;
     }
-    dprintf(player->socket, "{\n\t\"sgt\": %d\n}\n", this->freq);
+    dprintf(player->socket, "{\n\t\"cmd\": \"sgt\",\n\t\"f\": %d\n}\n", this->freq);
 }

@@ -129,7 +129,7 @@ typedef struct list_players_s {
 typedef struct cmd_ai_s {
     char *uuid;
     char **cmd;
-    float duration;
+    int duration;
 } cmd_ai_t;
 
 typedef struct list_cmd_ai_s {
@@ -192,7 +192,7 @@ void display_help(void);
 char *get_unique_uuid(void);
 struct timeval float_to_timeval(float seconds);
 cmd_ai_t *get_action_by_id(this_t *this, char *uuid);
-cmd_ai_t *create_action_ai(this_t *this, player_t *player, char *cmd, char *arg, float duration);
+cmd_ai_t *create_action_ai(this_t *this, player_t *player, char *cmd, char *arg, int duration);
 player_t *get_player_by_uuid(this_t *this, char *uuid);
 char *rm_extra_spaces(char *str);
 void update_pos(this_t *this, int *x, int *y);
@@ -253,6 +253,7 @@ void server_timer(this_t *this);
 int add_player_to_team(this_t *this, player_t *player);
 void add_player_to_set(this_t *this);
 void handle_new_connection(this_t *this);
+void delete_player(this_t *this, player_t *player);
 
 //ERRORS
 void socket_error(int control_socket);
@@ -307,13 +308,17 @@ void enw(this_t *this, player_t *player, egg_t *egg);
 void send_enw_to_gui(this_t *this, player_t *player, egg_t *egg);
 void ebo(this_t *this, player_t *player, char *uuid);
 void send_ebo_to_gui(this_t *this, char *uuid);
+void pbc(this_t *this, player_t *player, char *uuid, char *msg);
+void send_pbc_to_gui(this_t *this, char *uuid, char *msg);
+void edi(this_t *this, player_t *player, char *uuid);
+void send_edi_to_gui(this_t *this, char *uuid);
 
 
 //COMMANDS (AI)
 void inventory(this_t *this, player_t *player, int exec);
 void look(this_t *this, player_t *player, int exec);
 void connect_nbr(this_t *this, player_t *player);
-
+void broadcast(this_t *this, player_t *player, int exec);
 void right(this_t *this, player_t *player, int exec);
 void left(this_t *this, player_t *player, int exec);
 void forward(this_t *this, player_t *player, int exec);

@@ -20,5 +20,5 @@ void send_pie_to_gui(this_t *this, int x, int y, char *r)
 
 void pie(this_t *this, player_t *player, int x, int y, char *r)
 {
-    dprintf(player->socket, "{\n\t\"cmd\": \"pie\",\n\t\"x\": %d,\n\t\"y\": %d\n\t\"r\": \"%s\"\n}\n", x, y, r);
+    dprintf(player->socket, "{\n\t\"cmd\": \"pie\",\n\t\"x\": %d,\n\t\"y\": %d,\n\t\"r\": \"%s\"\n}\n", x, y, r);
 }

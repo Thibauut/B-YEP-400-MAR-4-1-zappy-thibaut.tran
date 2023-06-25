@@ -13,16 +13,16 @@ void set_direction_left(player_t *player, int orientation)
         player->o = WEST;
         return;
     }
-    if (orientation == WEST) {
+    if (orientation == EAST) {
         player->o = SOUTH;
         return;
     }
     if (orientation == SOUTH) {
-        player->o = EAST;
+        player->o = WEST;
         return;
     }
-    if (orientation == EAST) {
-        player->o = NORTH;
+    if (orientation == WEST) {
+        player->o = SOUTH;
         return;
     }
 }

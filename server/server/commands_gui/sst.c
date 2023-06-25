@@ -18,5 +18,5 @@ void sst(this_t *this, player_t *player)
         return;
     }
     this->freq = atoi(this->cmd[1]);
-    dprintf(player->socket, "{\n\t\"sst\": %d\n}\n", this->freq);
+    dprintf(player->socket, "{\n\t\"cmd\": \"sst\",\n\t\"f\": %d\n}\n", this->freq);
 }

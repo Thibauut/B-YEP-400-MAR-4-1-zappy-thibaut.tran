@@ -104,13 +104,13 @@ void get_players_positions(this_t *this, player_t *player)
     }
 }
 
-void print_actual_tile(this_t *this, player_t *player)
+char *print_actual_tile(this_t *this, player_t *player, char *str)
 {
     list_vector2d_t *tmp_tiles = this->tiles_pos;
     list_vector2d_t *tmp_players = this->players_pos;
     char *content = malloc(sizeof(char *) * 4096);
+    content[0] = '\0';
     int count = 0;
-    dprintf(player->socket, "[player");
     for(; tmp_players; tmp_players = tmp_players->next) {
         if (player->x == tmp_players->vector->x && player->y == tmp_players->vector->y)
             content = my_strcat(content, " player");
@@ -129,7 +129,10 @@ void print_actual_tile(this_t *this, player_t *player)
         content = my_strcat(content, " phiras");
     for (int i = 0; i < this->map->map[player->y][player->x]->thystame; i++)
         content = my_strcat(content, " thystame");
-    dprintf(player->socket, "%s,", content);
+    str = my_strcat(str, "[ player");
+    str = my_strcat(str, content);
+    str = my_strcat(str, ",");
+    return (str);
 }
 
 void get_tiles_contents(this_t *this, player_t *player)
@@ -138,8 +141,10 @@ void get_tiles_contents(this_t *this, player_t *player)
     list_players_t *tmp_players = this->players;
     char **content = malloc(sizeof(char *) * (list_len_vector(tmp_tiles) + 1));
     int count = 0;
-    for (int index = 0; tmp_tiles; tmp_tiles = tmp_tiles->next, index++) {
+    int index = 0;
+    for (; tmp_tiles; tmp_tiles = tmp_tiles->next, index++) {
         content[index] = malloc(sizeof(char) * 4096);
+        content[index][0] = '\0';
         for(tmp_players = this->players; tmp_players; tmp_players = tmp_players->next) {
             if (tmp_tiles->vector->x == tmp_players->player->x && tmp_tiles->vector->y == tmp_players->player->y && player->id != tmp_players->player->id && tmp_players->player->in_team == true)
                 content[index] = my_strcat(content[index], " player");
@@ -167,16 +172,20 @@ void get_tiles_contents(this_t *this, player_t *player)
             this->map->map[tmp_tiles->vector->y][tmp_tiles->vector->x]->thystame <= 0)
             content[index] = my_strcat(content[index], ", ");
     }
+    content[index] = NULL;
     char *tmp;
-    print_actual_tile(this, player);
-    for (int i = 0; content[i]; i++) {
+    char *FINAL_PRINT = malloc(sizeof(char) * 4096);
+    FINAL_PRINT = print_actual_tile(this, player, FINAL_PRINT);
+    int i = 0;
+    for (; content[i]; i++) {
         tmp = rm_extra_spaces(content[i]);
         content[i] = strdup(tmp);
-        dprintf(player->socket, "%s", content[i]);
+        FINAL_PRINT = my_strcat(FINAL_PRINT, content[i]);
         if (content[i + 1] != NULL && content[i][0] != ',')
-            dprintf(player->socket, ",");
+            FINAL_PRINT = my_strcat(FINAL_PRINT, ",");
     }
-    dprintf(player->socket, "]\n");
+    FINAL_PRINT = my_strcat(FINAL_PRINT, " ]");
+    dprintf(player->socket, "%s\n", FINAL_PRINT);
 }
 
 void look(this_t *this, player_t *player, int exec)

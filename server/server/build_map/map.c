@@ -9,11 +9,11 @@
 
 void init_density(this_t *this)
 {
-    this->map->food_density = 2.0;
-    this->map->linemate_density = 1;
-    this->map->deraumere_density = 1;
-    this->map->sibur_density = 1;
-    this->map->mendiane_density = 1;
+    this->map->food_density = 0.5;
+    this->map->linemate_density = 0.3;
+    this->map->deraumere_density = 0.15;
+    this->map->sibur_density = 0.1;
+    this->map->mendiane_density = 0.1;
     this->map->phiras_density = 0.08;
     this->map->thystame_density = 0.05;
 }
@@ -68,9 +68,9 @@ void init_zappy_map(this_t *this)
     init_density(this);
     init_max_ressources(this);
     int y = 0, x = 0;
-    this->map->map = malloc(sizeof(tile_t **) * this->height + 1);
-    for (; y < this->height; y++) {
-        this->map->map[y] = malloc(sizeof(tile_t *) * this->width + 1);
+    this->map->map = malloc(sizeof(tile_t **) * (this->height + 1));
+    for (y = 0; y < this->height; y++) {
+        this->map->map[y] = malloc(sizeof(tile_t *) * (this->width + 1));
         for (x = 0; x < this->width; x++) {
             this->map->map[y][x] = malloc(sizeof(tile_t));
             this->map->map[y][x]->food = 0;
@@ -138,8 +138,8 @@ void refill_map(this_t *this)
 
 void update_map(this_t *this)
 {
-    if (this->refill_map_timer >= (double)20 * (1260 / (double)this->freq)) {
-        printf("map refiled\n");
+    if (this->refill_map_timer >= (20 / this->freq)) {
+        // printf("map refiled\n");
         refill_map(this);
         this->refill_map_timer = 0;
     }

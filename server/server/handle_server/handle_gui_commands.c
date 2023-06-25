@@ -13,6 +13,9 @@ int exec_gui_commands(this_t *this, player_t *player)
         player->is_gui = true;
         return 0;
     }
+    if (this->cmd[0] != NULL || this->cmd[1] != NULL)
+        if (player->is_gui)
+            printf("GUI: %s %s\n", this->cmd[0], this->cmd[1]);
     if (player->is_gui == true && player->in_team == false) {
         if (map_info_gui_commands(this, player) == 0)
             return 0;

@@ -36,20 +36,22 @@ void add_player_by_egg(this_t *this, player_t *player, list_teams_t *tmp)
     int index = rand() % list_len_egg(egg_teams);
     egg_t *egg = get_element_egg(egg_teams, index);
     tmp->team->nb_players += 1;
+    this->nb_clients_egg -= 1;
     player->team = egg->team;
-    player->level = egg->level;
+    player->level = 1;
     player->x = egg->x;
     player->y = egg->y;
     player->o = egg->o;
     player->life = egg->life;
+    player->id = strdup(egg->id);
     player->incantation = egg->incantation;
     init_inventory(player);
-    dprintf(player->socket, "%d\n", (tmp->team->max_players - tmp->team->nb_players) + this->nb_clients_egg);
+    dprintf(player->socket, "%d\n", (tmp->team->max_players - tmp->team->nb_players));
     dprintf(player->socket, "%d %d\n", this->width, this->height);
     pnw(this, player);
-    send_ebo_to_gui(this, player->id);
+    send_ebo_to_gui(this, egg->id);
+    send_edi_to_gui(this, egg->id);
     this->eggs = free_element_at_egg(this->eggs, index);
-    this->nb_clients_egg -= 1;
 }
 
 int add_player_to_team(this_t *this, player_t *player)
@@ -57,7 +59,7 @@ int add_player_to_team(this_t *this, player_t *player)
     list_teams_t *tmp = this->teams;
     for (; tmp != NULL; tmp = tmp->next) {
         if (my_strcmp(tmp->team->name, this->cmd[0]) == 0) {
-            if (((tmp->team->max_players - tmp->team->nb_players) + this->nb_clients_egg) <= 0)
+            if (((tmp->team->max_players - tmp->team->nb_players)) <= 0)
                 return 1;
             if (this->nb_clients_egg <= 0) {
                 tmp->team->nb_players += 1;
@@ -66,7 +68,7 @@ int add_player_to_team(this_t *this, player_t *player)
                 player->x = rand() % this->width;
                 player->y = rand() % this->height;
                 player->o = rand() % 4;
-                player->life = 126 / this->freq;
+                player->life = 126;
                 player->incantation = false;
                 init_inventory(player);
                 dprintf(player->socket, "%d\n", tmp->team->max_players - tmp->team->nb_players);

@@ -18,6 +18,16 @@ list_eggs_t *create_cell_egg(egg_t *egg)
     cell->egg->y = egg->y;
     cell->egg->o = egg->o;
     cell->egg->team = egg->team;
+    cell->egg->uuid_creator = egg->uuid_creator;
+    cell->egg->id = egg->id;
+    cell->egg->in_team = egg->in_team;
+    cell->egg->incantation = egg->incantation;
+    cell->egg->inventory = egg->inventory;
+    cell->egg->is_gui = egg->is_gui;
+    cell->egg->level = egg->level;
+    cell->egg->life = egg->life;
+    cell->egg->socket = egg->socket;
+    cell->egg->uuid_creator = egg->uuid_creator;
     cell->next = NULL;
     return (cell);
 }

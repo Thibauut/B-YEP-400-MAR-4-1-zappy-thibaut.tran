@@ -13,7 +13,7 @@ void mct(this_t *this, player_t *player)
         dprintf(player->socket, "ko\n");
         return;
     }
-    dprintf(player->socket, "{\n\t\"map\": [\n");
+    dprintf(player->socket, "{\n\t\"cmd\": \"mct\",\n\t\"map\": [\n");
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
             dprintf(player->socket,

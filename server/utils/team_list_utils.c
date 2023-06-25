@@ -16,6 +16,7 @@ list_teams_t *create_cell_team(team_t *team)
     cell->team->max_players = team->max_players;
     cell->team->name = team->name;
     cell->team->nb_players = team->nb_players;
+    cell->team->players_id = team->players_id;
     cell->next = NULL;
     return (cell);
 }
@@ -31,7 +32,7 @@ list_teams_t *add_element_team(list_teams_t *list, team_t *team, int pos)
         cell->next = list;
         return (cell);
     }
-    for (int i = 0; i < pos; i += 1) {
+    for (int i = 0; i < pos && curr != NULL; i += 1) {
         prev = curr;
         curr = curr->next;
     }

@@ -7,14 +7,43 @@
 
 #include "../include/my.h"
 
+
 void read_data(this_t *this, player_t *player, int i)
 {
     int readValue = 0;
     char buffer[1024] = "\0";
+    list_players_t *tmp = this->players;
     if ((readValue = read(player->socket, buffer, 1024)) == 0) {
-        close(player->socket);
-        FD_CLR(player->socket, &this->tmpfds);
-        player->socket = -1;
+        if (player->is_gui == false && player->in_team == true) {
+            delete_player(this, player);
+            return;
+        }
+         if (player->is_gui == true && player->in_team == false) {
+            FD_CLR(player->socket, &this->tmpfds);
+            for (int i = 0; tmp; tmp = tmp->next) {
+                if (tmp->player->is_gui == true && tmp->player->in_team == false
+                && my_strcmp(tmp->player->id, player->id) == 0) {
+                    close(player->socket);
+                    player->socket = -1;
+                    this->players = free_element_at(this->players, i);
+                    break;
+                }
+            }
+            return;
+        }
+        if (player->is_gui == false && player->in_team == false) {
+            FD_CLR(player->socket, &this->tmpfds);
+            for (int i = 0; tmp; tmp = tmp->next) {
+                if (tmp->player->is_gui == false && tmp->player->in_team == false
+                && my_strcmp(tmp->player->id, player->id) == 0) {
+                    close(player->socket);
+                    player->socket = -1;
+                    this->players = free_element_at(this->players, i);
+                    break;
+                }
+            }
+            return;
+        }
     } else {
         this->cmd = NULL;
         char *tmp = strdup(buffer);

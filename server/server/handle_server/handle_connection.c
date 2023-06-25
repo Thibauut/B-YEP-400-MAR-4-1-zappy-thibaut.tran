@@ -10,6 +10,7 @@
 void add_player_to_set(this_t *this)
 {
     list_players_t *tmp = this->players;
+    this->maxfd = -1;
     for (; tmp != NULL; tmp = tmp->next) {
         if (tmp->player->socket > 0) {
             FD_SET(tmp->player->socket, &this->tmpfds);
@@ -57,7 +58,7 @@ void handle_new_connection(this_t *this)
         player_t *newplayer = create_player(this);
         printf("New connection id: %s\n", newplayer->id);
         dprintf(this->new_socket, "WELCOME!\n");
-        this->players = add_element(this->players, newplayer, 0);
+        this->players = add_element(this->players, newplayer, list_len(this->players));
         new_player(this);
     }
 }
