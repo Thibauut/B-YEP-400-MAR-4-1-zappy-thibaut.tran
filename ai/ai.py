@@ -76,14 +76,14 @@ class MyAI():
         self.nb = 0
         self.nbFork = 0
         self.parser(data)
-        self.items_to_gather = [{'item': 'food', 'quantity': 12}, {'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':1}], [{'item': 'food', 'quantity': 12}, {'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1}, {'item': 'sibur', 'quantity':1},], [{'item': 'food', 'quantity': 12}, {'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':2}, {'item': 'sibur', 'quantity':1}], [{'item': 'food', 'quantity': 12}, {'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1},{'item': 'sibur', 'quantity':2}]
-        self.items_to_lvl = [{'item': 'linemate', 'quantity':1}], [{'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1}, {'item': 'sibur', 'quantity':1},], [{'item': 'linemate', 'quantity':2}, {'item': 'sibur', 'quantity':1}, {'item': 'phiras', 'quantity':2}], [{'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1},{'item': 'sibur', 'quantity':2}, {'item': 'phiras', 'quantity':1}]
+        self.items_to_gather = [{'item': 'food', 'quantity': 20}, {'item': 'thystame', 'quantity': 1},{'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':1}], [{'item': 'food', 'quantity': 20}, {'item': 'thystame', 'quantity': 1},{'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1}, {'item': 'sibur', 'quantity':1},], [{'item': 'food', 'quantity': 20}, {'item': 'thystame', 'quantity': 1}, {'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':2}, {'item': 'sibur', 'quantity':1}], [{'item': 'food', 'quantity': 20}, {'item': 'thystame', 'quantity': 1}, {'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1},{'item': 'sibur', 'quantity':2}], [{'item': 'food', 'quantity': 20}, {'item': 'thystame', 'quantity': 1}, {'item': 'phiras', 'quantity': 3}, {'item': 'mendiane', 'quantity': 3}, {'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':2}, {'item': 'sibur', 'quantity':1}], [{'item': 'food', 'quantity': 20}, {'item': 'thystame', 'quantity': 1}, {'item': 'phiras', 'quantity': 3}, {'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1},{'item': 'sibur', 'quantity':2}], [{'item': 'food', 'quantity': 20}, {'item': 'thystame', 'quantity': 1},{'item': 'phiras', 'quantity': 3}, {'item': 'sibur', 'quantity': 3}, {'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':2}, {'item': 'sibur', 'quantity':3}], [{'item': 'food', 'quantity': 20}, {'item': 'thystame', 'quantity': 1}, {'item': 'phiras', 'quantity': 2}, {'item': 'sibur', 'quantity': 2}, {'item': 'linemate', 'quantity':2}, {'item': 'deraumere', 'quantity':2}, {'item': 'mendiane', 'quantity':2}]
+        self.items_to_lvl = [{'item': 'linemate', 'quantity':1}], [{'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1}, {'item': 'sibur', 'quantity':1},], [{'item': 'linemate', 'quantity':2}, {'item': 'sibur', 'quantity':1}, {'item': 'phiras', 'quantity':2}], [{'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':1},{'item': 'sibur', 'quantity':2}, {'item': 'phiras', 'quantity':1}], [{'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':2},{'item': 'sibur', 'quantity':1}, {'item': 'mendiane', 'quantity':3}], [{'item': 'linemate', 'quantity':1}, {'item': 'deraumere', 'quantity':2},{'item': 'sibur', 'quantity':3}, {'item': 'phiras', 'quantity':1}], [{'item': 'linemate', 'quantity':2}, {'item': 'deraumere', 'quantity':2},{'item': 'sibur', 'quantity':2}, {'item': 'mendiane', 'quantity':2}, {'item': 'phiras', 'quantity':2}, {'item': 'thystame', 'quantity':1}]
 
 
     def run(self, client):
         client.ai.handle_inventory(client)
         client.ai.recon(client)
-        if client.ai.get_item('food') < 10:
+        if client.ai.get_item('food') < 15:
             if self.look[0].count('player') < 2:
                 for item in client.ai.items_to_gather[self.level - 1]:
                     if client.ai.check_item(item['item'], 0) > 0:
@@ -159,9 +159,32 @@ class MyAI():
             client.send_command_to_server("Incantation\n")
             client.receive_data_from_server()
             client.receive_data_from_server()
-            self.get_level(client)
-            # if self.level > 2:
-            #     client.receive_data_from_server()
+            if (client.data.decode() != 'ko'):
+                self.get_level(client)
+                print("|||||||LEVEL"+str(self.level)+"INCOMING|||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"INCOMING|||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"INCOMING|||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"INCOMING|||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"INCOMING|||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"INCOMING|||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"INCOMING|||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"INCOMING|||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||JE SUIS LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||JE SUIS LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||JE SUIS LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||JE SUIS LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||JE SUIS LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||JE SUIS LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||JE SUIS LEVEL"+str(self.level)+"||||||||||")
+                print("|||||||JE SUIS LEVEL"+str(self.level)+"||||||||||")
 
 
     def parser(self, data):
@@ -205,7 +228,7 @@ class MyAI():
         try:
             self.level = int(level)
         except:
-            self.level += 1
+            return
 
     def go_to_item(self, client, item):
         try:
@@ -270,12 +293,14 @@ class MyAI():
         except:
             return
         if self.ClientNB != 0:
-        #     client.send_command_to_server("Fork\n")
-        #     client.receive_data_from_server()
+        #     if self.nbFork < 8:
+        #         client.send_command_to_server("Fork\n")
+        #         client.receive_data_from_server()
+        #         self.nbFork += 1
         # else:
-            thread = threading.Thread(target=MyClient)
-            thread.start()
-        # subprocess.Popen(["./zappy_ai", "-p", str(client.port), "-n", client.team, "-h", client.ip])
+            # thread = threading.Thread(target=MyClient)
+            # thread.start()
+            subprocess.Popen(["./zappy_ai", "-p", str(client.port), "-n", client.team, "-h", client.ip])
 
 
     def incantation(self, client):
@@ -289,6 +314,10 @@ class MyAI():
         self.level3(client)
         self.level4(client)
         self.level5(client)
+        self.level6(client)
+        self.level7(client)
+        self.level8(client)
+
 
     def level2(self, client):
         if self.level == 1 and (self.linemate >= 1 or self.check_item('linemate', 0) >= 1):
@@ -299,7 +328,7 @@ class MyAI():
             client.receive_data_from_server()
             if (client.data.decode() != "ko\n"):
                 client.receive_data_from_server()
-                self.get_level(client)
+            self.get_level(client)
 
     def level3(self, client):
         if (
@@ -321,8 +350,8 @@ class MyAI():
             client.send_command_to_server("Incantation\n")
             client.receive_data_from_server()
             if (client.data.decode() != "ko\n"):
-                self.get_level(client)
                 client.receive_data_from_server()
+            self.get_level(client)
 
     def level4(self, client):
         if (
@@ -332,14 +361,6 @@ class MyAI():
             (self.phiras >= 2 or self.check_item('phiras', 0) >= 2) and
             (self.sibur >= 1 or self.check_item('sibur', 0) >= 1)
         ):
-            print("|||||||LEVEL4 INCOMING|||||||||||")
-            print("|||||||LEVEL4 INCOMING|||||||||||")
-            print("|||||||LEVEL4 INCOMING|||||||||||")
-            print("|||||||LEVEL4 INCOMING|||||||||||")
-            print("|||||||LEVEL4 INCOMING|||||||||||")
-            print("|||||||LEVEL4 INCOMING|||||||||||")
-            print("|||||||LEVEL4 INCOMING|||||||||||")
-            print("|||||||LEVEL4 INCOMING|||||||||||")
             if self.check_item('linemate', 0) < 2:
                 client.send_command_to_server("Set linemate\n")
                 client.receive_data_from_server()
@@ -355,29 +376,9 @@ class MyAI():
                 client.receive_data_from_server()
             client.send_command_to_server("Incantation\n")
             client.receive_data_from_server()
-            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
-            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
-            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
-            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
-            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
-            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
-            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
-            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
-            print("||||||||||||||||||||||||||||||||||||||||LEVEL4|||||||||||||||||||||||||||||")
-
             if (client.data.decode() != "ko\n"):
                 client.receive_data_from_server()
-                self.get_level(client)
-                print("*********************************************JE SUIS NIVEAU 4**********************************************")
-                print("*********************************************JE SUIS NIVEAU 4**********************************************")
-                print("*********************************************JE SUIS NIVEAU 4**********************************************")
-                print("*********************************************JE SUIS NIVEAU 4**********************************************")
-                print("*********************************************JE SUIS NIVEAU 4**********************************************")
-                print("*********************************************JE SUIS NIVEAU 4**********************************************")
-                print("*********************************************JE SUIS NIVEAU 4**********************************************")
-
-                if (client.data.decode() != "ko\n"):
-                    client.receive_data_from_server()
+            self.get_level(client)
 
     def level5(self, client):
         if (
@@ -424,25 +425,34 @@ class MyAI():
             print("|||||||LEVEL5 INCOMING|||||||||||")
             if (client.data.decode() != "ko\n"):
                 client.receive_data_from_server()
-                self.get_level(client)
-                print("*********************************************JE SUIS NIVEAU 5**********************************************")
-                print("*********************************************JE SUIS NIVEAU 5**********************************************")
-                print("*********************************************JE SUIS NIVEAU 5**********************************************")
-                print("*********************************************JE SUIS NIVEAU 5**********************************************")
-                print("*********************************************JE SUIS NIVEAU 5**********************************************")
-                print("*********************************************JE SUIS NIVEAU 5**********************************************")
-                print("*********************************************JE SUIS NIVEAU 5**********************************************")
+            self.get_level(client)
+            print("*********************************************JE SUIS NIVEAU 5**********************************************")
+            print("*********************************************JE SUIS NIVEAU 5**********************************************")
+            print("*********************************************JE SUIS NIVEAU 5**********************************************")
+            print("*********************************************JE SUIS NIVEAU 5**********************************************")
+            print("*********************************************JE SUIS NIVEAU 5**********************************************")
+            print("*********************************************JE SUIS NIVEAU 5**********************************************")
+            print("*********************************************JE SUIS NIVEAU 5**********************************************")
+
 
 
     def level6(self, client):
         if (
             self.level == 5 and
             self.look[0].count('player') >= 4 and
-            self.linemate >= 1 and
-            self.deraumere >= 2 and
-            self.sibur >= 1 and
-            self.mendiane >= 3
+            (self.linemate >= 1 or self.check_item('linemate', 0) >= 1) and
+            (self.deraumere >= 2 or self.check_item('deraumere', 0) >= 2) and
+            (self.sibur >= 1 or self.check_item('sibur', 0) >= 1) and
+            (self.mendiane >= 3 or self.check_item('mendiane', 0) >= 1)
         ):
+            print("|||||||LEVEL6 INCOMING|||||||||||")
+            print("|||||||LEVEL6 INCOMING|||||||||||")
+            print("|||||||LEVEL6 INCOMING|||||||||||")
+            print("|||||||LEVEL6 INCOMING|||||||||||")
+            print("|||||||LEVEL6 INCOMING|||||||||||")
+            print("|||||||LEVEL6 INCOMING|||||||||||")
+            print("|||||||LEVEL6 INCOMING|||||||||||")
+            print("|||||||LEVEL6 INCOMING|||||||||||")
             if self.check_item('linemate', 0) < 1:
                 client.send_command_to_server("Set linemate\n")
                 client.receive_data_from_server()
@@ -463,20 +473,34 @@ class MyAI():
                 client.receive_data_from_server()
             client.send_command_to_server("Incantation\n")
             client.receive_data_from_server()
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL6|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL6|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL6|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL6|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL6|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL6|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL6|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL6|||||||||||||||||||||||||||||")
+            print("||||||||||||||||||||||||||||||||||||||||LEVEL6|||||||||||||||||||||||||||||")
+            print("*********************************************JE SUIS NIVEAU 6**********************************************")
+            print("*********************************************JE SUIS NIVEAU 6**********************************************")
+            print("*********************************************JE SUIS NIVEAU 6**********************************************")
+            print("*********************************************JE SUIS NIVEAU 6**********************************************")
+            print("*********************************************JE SUIS NIVEAU 6**********************************************")
+            print("*********************************************JE SUIS NIVEAU 6**********************************************")
+            print("*********************************************JE SUIS NIVEAU 6**********************************************")
             if (client.data.decode() != "ko\n"):
                 client.receive_data_from_server()
-                self.get_level(client)
-                if (client.data.decode() != "ko\n"):
-                    client.receive_data_from_server()
+            self.get_level(client)
 
     def level7(self, client):
         if (
             self.level == 6 and
             self.look[0].count('player') >= 6 and
-            self.linemate >= 1 and
-            self.deraumere >= 2 and
-            self.sibur >= 3 and
-            self.phiras >= 1
+            (self.linemate >= 1 or self.check_item('linemate', 0) >= 1) and
+            (self.deraumere >= 2 or self.check_item('deraumere', 0) >= 2) and
+            (self.sibur >= 3 or self.check_item('sibur', 0) >= 3) and
+            (self.phiras >= 1 or self.check_item('phiras', 0) >= 1)
         ):
             if self.check_item('linemate', 0) < 1:
                 client.send_command_to_server("Set linemate\n")
@@ -500,20 +524,18 @@ class MyAI():
             client.receive_data_from_server()
             if (client.data.decode() != "ko\n"):
                 client.receive_data_from_server()
-                self.get_level(client)
-                if (client.data.decode() != "ko\n"):
-                    client.receive_data_from_server()
+            self.get_level(client)
 
     def level8(self, client):
         if (
             self.level == 7 and
             self.look[0].count('player') >= 6 and
-            self.linemate >= 2 and
-            self.deraumere >= 2 and
-            self.sibur >= 2 and
-            self.mendiane >= 2 and
-            self.phiras >= 2 and
-            self.thystame >= 1
+            (self.linemate >= 2 or self.check_item('linemate', 0) >= 2) and
+            (self.deraumere >= 2 or self.check_item('deraumer', 0) >= 2) and
+            (self.sibur >= 2 or self.check_item('sibur', 0) >= 2) and
+            (self.mendiane >= 2 or self.check_item('mendiane', 0) >= 2) and
+            (self.phiras >= 2 or self.check_item('phiras', 0) >= 2) and
+            (self.thystame >= 1 or self.check_item('thystame', 0) >= 1)
         ):
             if self.check_item('linemate', 0) < 2:
                 client.send_command_to_server("Set linemate\n")
@@ -547,21 +569,20 @@ class MyAI():
             client.receive_data_from_server()
             if (client.data.decode() != "ko\n"):
                 client.receive_data_from_server()
-                self.get_level(client)
-                if (client.data.decode() != "ko\n"):
-                    client.receive_data_from_server()
+            self.get_level(client)
 
 
 
 def main():
     if len(sys.argv) == 5 or len(sys.argv) == 7:
-        # try:
-        thread = threading.Thread(target=MyClient)
-        # except Exception as e:
-        #     print(e)
-        #     exit(84)
-        thread.start()
-        thread.join()
+        try:
+            # thread = threading.Thread(target=MyClient)
+            MyClient()
+        except Exception as e:
+            print(e)
+            exit(84)
+        # thread.start()
+        # thread.join()
         return 0
     else:
         exit(84)

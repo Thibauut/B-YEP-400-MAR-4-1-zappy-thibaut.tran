@@ -16,6 +16,7 @@ SRC_GUI		=	gui/requests/Client.cpp				\
 				gui/Scene/Scene.cpp					\
 				gui/Anim/AnimRaylib.cpp				\
 				gui/Anim/Anim.cpp					\
+				gui/screens/BoxPlayer.cpp			\
 				gui/screens/BoxInfo.cpp				\
 				gui/Map/Cursor.cpp					\
 				gui/Bar/BarTime.cpp					\
@@ -65,6 +66,7 @@ SRC_SERVER	=	server/utils/utils.c									\
 				server/server/commands_gui/events/pfk.c					\
 				server/server/commands_gui/events/enw.c					\
 				server/server/commands_gui/events/ebo.c					\
+				server/server/commands_gui/events/edi.c					\
 				server/server/commands_ai/inventory.c					\
 				server/server/commands_ai/broadcast.c					\
 				server/server/commands_ai/look.c						\
@@ -77,7 +79,6 @@ SRC_SERVER	=	server/utils/utils.c									\
 				server/server/commands_ai/eject.c						\
 				server/server/commands_ai/fork.c						\
 				server/server/commands_ai/incantation.c					\
-				server/server/commands_gui/events/edi.c					\
 				server/main.c
 
 NAME_GUI	=	zappy_gui
