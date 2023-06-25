@@ -48,10 +48,10 @@ void add_player_by_egg(this_t *this, player_t *player, list_teams_t *tmp)
     init_inventory(player);
     dprintf(player->socket, "%d\n", (tmp->team->max_players - tmp->team->nb_players));
     dprintf(player->socket, "%d %d\n", this->width, this->height);
-    pnw(this, player);
-    send_ebo_to_gui(this, egg->id);
+    // send_ebo_to_gui(this, egg->id);
     send_edi_to_gui(this, egg->id);
     this->eggs = free_element_at_egg(this->eggs, index);
+    pnw(this, player);
 }
 
 int add_player_to_team(this_t *this, player_t *player)

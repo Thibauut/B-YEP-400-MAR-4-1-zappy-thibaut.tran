@@ -17,7 +17,7 @@ int object_to_set_food(this_t *this, player_t *player, int *ret)
         }
         player->inventory->food -= 1;
         this->map->map[player->y][player->x]->food += 1;
-        send_pdr_to_gui(this, player->id, 0);
+        // send_pdr_to_gui(this, player->id, 0);
         return 0;
     }
     *ret += 1;
@@ -34,7 +34,7 @@ int object_to_set_linemate(this_t *this, player_t *player, int *ret)
         }
         player->inventory->linemate -= 1;
         this->map->map[player->y][player->x]->linemate += 1;
-        send_pdr_to_gui(this, player->id, 1);
+        // send_pdr_to_gui(this, player->id, 1);
         return 0;
     }
     *ret += 1;
@@ -51,7 +51,7 @@ int objet_to_set_deraumere(this_t *this, player_t *player, int *ret)
         }
         player->inventory->deraumere -= 1;
         this->map->map[player->y][player->x]->deraumere += 1;
-        send_pdr_to_gui(this, player->id, 2);
+        // send_pdr_to_gui(this, player->id, 2);
         return 0;
     }
     *ret += 1;
@@ -68,7 +68,7 @@ int object_to_set_sibur(this_t *this, player_t *player, int *ret)
         }
         player->inventory->sibur -= 1;
         this->map->map[player->y][player->x]->sibur += 1;
-        send_pdr_to_gui(this, player->id, 3);
+        // send_pdr_to_gui(this, player->id, 3);
         return 0;
     }
     *ret += 1;
@@ -85,7 +85,7 @@ int object_to_set_mendiane(this_t *this, player_t *player, int *ret)
         }
         player->inventory->mendiane -= 1;
         this->map->map[player->y][player->x]->mendiane += 1;
-        send_pdr_to_gui(this, player->id, 4);
+        // send_pdr_to_gui(this, player->id, 4);
         return 0;
     }
     *ret += 1;
@@ -102,7 +102,7 @@ int object_to_set_phiras(this_t *this, player_t *player, int *ret)
         }
         player->inventory->phiras -= 1;
         this->map->map[player->y][player->x]->phiras += 1;
-        send_pdr_to_gui(this, player->id, 5);
+        // send_pdr_to_gui(this, player->id, 5);
         return 0;
     }
     *ret += 1;
@@ -119,7 +119,7 @@ int object_to_set_thystame(this_t *this, player_t *player, int *ret)
         }
         player->inventory->thystame -= 1;
         this->map->map[player->y][player->x]->thystame += 1;
-        send_pdr_to_gui(this, player->id, 6);
+        // send_pdr_to_gui(this, player->id, 6);
         return 0;
     }
     *ret += 1;

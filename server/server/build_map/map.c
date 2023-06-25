@@ -138,7 +138,7 @@ void refill_map(this_t *this)
 
 void update_map(this_t *this)
 {
-    if (this->refill_map_timer >= (20 / this->freq)) {
+    if (this->refill_map_timer >= (20)) {
         // printf("map refiled\n");
         refill_map(this);
         this->refill_map_timer = 0;

@@ -30,7 +30,7 @@ void level_up_all_on_tile(this_t *this, player_t *player)
 {
     list_players_t *tmp = this->players;
     for (; tmp != NULL; tmp = tmp->next) {
-        if (tmp->player->x == player->x && tmp->player->y == player->y) {
+        if (tmp->player->x == player->x && tmp->player->y == player->y && tmp->player->level == player->level) {
             tmp->player->incantation = true;
             tmp->player->level += 1;
         }
@@ -52,7 +52,7 @@ void create_incantation_events(this_t *this, player_t *player)
     list_players_t *tmp = this->players;
     list_players_t *list = NULL;
     for (; tmp != NULL; tmp = tmp->next) {
-        if (tmp->player->x == player->x && tmp->player->y == player->y)
+        if (tmp->player->x == player->x && tmp->player->y == player->y && tmp->player->in_team == true)
             list = add_element(list, tmp->player, list_len(list));
     }
     send_pic_to_gui(this, player->x, player->y, player->id, list);
@@ -62,7 +62,8 @@ void send_end_incantation(this_t *this, player_t *player)
 {
     list_players_t *tmp = this->players;
     for (; tmp; tmp = tmp->next) {
-        if (tmp->player->x == player->x && tmp->player->y == player->y) {
+        if (tmp->player->x == player->x && tmp->player->y == player->y && tmp->player->in_team == true
+        && tmp->player->incantation == true) {
             dprintf(tmp->player->socket, "Current level: %d\n", tmp->player->level);
             tmp->player->incantation = false;
         }
@@ -75,12 +76,13 @@ int can_incant(this_t *this, player_t *player, int elevation_ritual[7][7], int *
     list_players_t *tmp = this->players;
     if (check_material(this, player, elevation_ritual, nb_players) == 1 || *nb_players < elevation_ritual[player->level - 1][0]) {
         for (; tmp != NULL; tmp = tmp->next) {
-            if (tmp->player->x == player->x && tmp->player->y == player->y) {
+            if (tmp->player->x == player->x && tmp->player->y == player->y && tmp->player->in_team == true) {
                 tmp->player->incantation = false;
                 dprintf(tmp->player->socket, "ko\n");
             }
+            if (tmp->player->is_gui == true && tmp->player->in_team == false)
+                send_pie_to_gui(this, player->x, player->y, "ko");
         }
-        send_pie_to_gui(this, player->x, player->y, "ko");
         return 1;
     }
     return 0;
@@ -90,7 +92,7 @@ void send_permission_to_incant(this_t *this, player_t *player)
 {
     list_players_t *tmp = this->players;
     for (; tmp != NULL; tmp = tmp->next) {
-        if (tmp->player->x == player->x && tmp->player->y == player->y) {
+        if (tmp->player->x == player->x && tmp->player->y == player->y && tmp->player->in_team == true) {
             dprintf(tmp->player->socket, "Elevation underway\n");
             tmp->player->incantation = true;
         }

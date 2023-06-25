@@ -9,18 +9,25 @@
 
 void ppo(this_t *this, player_t *player)
 {
-    if (this->cmd[1] == NULL || this->cmd[2] != NULL) {
+    if (this->cmd[1] == NULL) {
         dprintf(player->socket, "ko\n");
         return;
     }
     list_players_t *tmp = this->players;
     for (; tmp != NULL; tmp = tmp->next) {
         if (my_strcmp(tmp->player->id, this->cmd[1]) == 0 && tmp->player->in_team == true) {
-            dprintf(player->socket, "{\n\t\"cmd\": \"ppo\",\n\t\"id\": \"%s\",\n\t\"x\": %d,\n\t\"y\": %d,\n\t\"o\": %d\n}\n",
-            tmp->player->id,
-            tmp->player->x,
-            tmp->player->y,
-            tmp->player->o);
+            char *response = malloc(sizeof(char) * 4096);
+            response[0] = '\0';
+            response = my_strcat(response, "{\n\t\"cmd\": \"ppo\",\n\t\"id\": \"");
+            response = my_strcat(response, tmp->player->id);
+            response = my_strcat(response, "\",\n\t\"x\": ");
+            response = my_strcat(response, my_itoa(tmp->player->x));
+            response = my_strcat(response, ",\n\t\"y\": ");
+            response = my_strcat(response, my_itoa(tmp->player->y));
+            response = my_strcat(response, ",\n\t\"o\": ");
+            response = my_strcat(response, my_itoa(tmp->player->o));
+            response = my_strcat(response, "\n}\n");
+            send(player->socket, response, strlen(response), 0);
             return;
         }
     }

@@ -20,5 +20,6 @@ void send_pfk_to_gui(this_t *this, char *uuid)
 
 void pfk(this_t *this, player_t *player, char *uuid)
 {
+
     dprintf(player->socket, "{\n\t\"cmd\": \"pfk\",\n\t\"id\": \"%s\"\n}\n", uuid);
 }

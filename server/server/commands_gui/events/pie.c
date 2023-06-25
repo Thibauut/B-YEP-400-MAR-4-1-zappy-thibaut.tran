@@ -20,5 +20,15 @@ void send_pie_to_gui(this_t *this, int x, int y, char *r)
 
 void pie(this_t *this, player_t *player, int x, int y, char *r)
 {
-    dprintf(player->socket, "{\n\t\"cmd\": \"pie\",\n\t\"x\": %d,\n\t\"y\": %d,\n\t\"r\": \"%s\"\n}\n", x, y, r);
+    char *response = malloc(sizeof(char) * 4096);
+    response[0] = '\0';
+
+    response = my_strcat(response, "{\n\t\"cmd\": \"pie\",\n\t\"x\": ");
+    response = my_strcat(response, my_itoa(x));
+    response = my_strcat(response, ",\n\t\"y\": ");
+    response = my_strcat(response, my_itoa(y));
+    response = my_strcat(response, ",\n\t\"r\": \"");
+    response = my_strcat(response, r);
+    response = my_strcat(response, "\"\n}\n");
+    send(player->socket, response, strlen(response), 0);
 }

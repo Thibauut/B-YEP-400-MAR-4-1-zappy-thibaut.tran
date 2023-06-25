@@ -23,13 +23,9 @@ void pic(this_t *this, player_t *player, int x, int y, char *id, list_players_t 
     char *response = malloc(sizeof(char) * 4096);
     response[0] = '\0';
     response = my_strcat(response, "{\n\t\"cmd\": \"pic\",\n\t\"x\": ");
-    char x_str[10];
-    sprintf(x_str, "%d", x);
-    response = my_strcat(response, x_str);
+    response = my_strcat(response, my_itoa(x));
     response = my_strcat(response, ",\n\t\"y\": ");
-    char y_str[10];
-    sprintf(y_str, "%d", y);
-    response = my_strcat(response, y_str);
+    response = my_strcat(response, my_itoa(y));
     response = my_strcat(response, ",\n\t\"l\": \"");
     response = my_strcat(response, id);
     response = my_strcat(response, "\",\n\t\"n\": [\n");
@@ -40,6 +36,6 @@ void pic(this_t *this, player_t *player, int x, int y, char *id, list_players_t 
         if (list->next)
             response = my_strcat(response, ",\n");
     }
-    response = my_strcat(response, "\n\t]\n}");
-    dprintf(player->socket, "%s\n", response);
+    response = my_strcat(response, "\n\t]\n}\n");
+    send(player->socket, response, strlen(response), 0);
 }

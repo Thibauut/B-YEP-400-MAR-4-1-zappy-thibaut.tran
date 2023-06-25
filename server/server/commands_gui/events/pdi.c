@@ -20,5 +20,10 @@ void send_pdi_to_gui(this_t *this, char *uuid)
 
 void pdi(this_t *this, player_t *player, char *dead_id)
 {
-    dprintf(player->socket, "{\n\t\"cmd\": \"pdi\",\n\t\"id\": \"%s\"\n}\n", dead_id);
+    char *response = malloc(sizeof(char) * 4096);
+    response[0] = '\0';
+    response = my_strcat(response, "{\n\t\"cmd\": \"pdi\",\n\t\"id\": \"");
+    response = my_strcat(response, dead_id);
+    response = my_strcat(response, "\"\n}\n");
+    send(player->socket, response, strlen(response), 0);
 }

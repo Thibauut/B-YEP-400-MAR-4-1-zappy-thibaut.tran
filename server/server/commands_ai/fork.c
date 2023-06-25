@@ -55,7 +55,7 @@ void fork_egg(this_t *this, player_t *player, int exec)
     if (exec == 0) {
         cmd_ai_t *action = create_action_ai(this, player, "Fork", NULL, 42);
         this->actions = add_element_ai(this->actions, action, list_len_ai(this->actions));
-        send_pfk_to_gui(this, player->id);
+        // send_pfk_to_gui(this, player->id);
         return;
     }
     egg_t *egg = create_egg(this, player);

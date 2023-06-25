@@ -20,5 +20,12 @@ void send_pgt_to_gui(this_t *this, char *take_id, int resource)
 
 void pgt(this_t *this, player_t *player, char *take_id, int resource)
 {
-    dprintf(player->socket, "{\n\t\"cmd\": \"pgt\",\n\t\"id\": \"%s\",\n\t\"resource\": %d\n}\n", take_id, resource);
+    char *response = malloc(sizeof(char) * 4096);
+    response[0] = '\0';
+    response = my_strcat(response, "{\n\t\"cmd\": \"pgt\",\n\t\"id\": \"");
+    response = my_strcat(response, take_id);
+    response = my_strcat(response, "\",\n\t\"resource\": ");
+    response = my_strcat(response, my_itoa(resource));
+    response = my_strcat(response, "\n}\n");
+    send(player->socket, response, strlen(response), 0);
 }

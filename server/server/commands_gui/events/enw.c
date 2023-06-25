@@ -20,5 +20,17 @@ void send_enw_to_gui(this_t *this, player_t *player, egg_t *egg)
 
 void enw(this_t *this, player_t *player, egg_t *egg)
 {
-    dprintf(player->socket, "{\n\t\"cmd\": \"enw\",\n\t\"egg_id\": \"%s\",\n\t\"player_id\": \"%s\",\n\t\"x\": %d,\n\t\"y\": %d\n}\n", egg->id, egg->uuid_creator, egg->x, egg->y);
+    char *response = malloc(sizeof(char) * 4096);
+    response[0] = '\0';
+    response = my_strcat(response, "{\n\t\"cmd\": \"enw\",\n\t\"egg_id\": \"");
+    response = my_strcat(response, egg->id);
+    response = my_strcat(response, "\",\n\t\"player_id\": \"");
+    response = my_strcat(response, egg->uuid_creator);
+    response = my_strcat(response, "\",\n\t\"x\": ");
+    response = my_strcat(response, my_itoa(egg->x));
+    response = my_strcat(response, ",\n\t\"y\": ");
+    response = my_strcat(response, my_itoa(egg->y));
+    response = my_strcat(response, "\n}\n");
+    send(player->socket, response, strlen(response), 0);
+    // dprintf(player->socket, "{\n\t\"cmd\": \"enw\",\n\t\"egg_id\": \"%s\",\n\t\"player_id\": \"%s\",\n\t\"x\": %d,\n\t\"y\": %d\n}\n", egg->id, egg->uuid_creator, egg->x, egg->y);
 }

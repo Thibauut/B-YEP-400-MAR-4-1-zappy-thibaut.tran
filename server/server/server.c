@@ -82,6 +82,7 @@ void server_loop(this_t *this)
     this->refill_map_timer = 0;
     this->is_start = false;
     this->players = NULL;
+    int level = 0;
     while (1) {
         server_timer(this);
         this->tmpfds = this->readfds;
@@ -94,7 +95,12 @@ void server_loop(this_t *this)
             exec_actions(this);
             update_map(this);
             update_player_life(this);
+            list_players_t *tmp = this->players;
+            for (; tmp != NULL; tmp = tmp->next)
+                if (tmp->player->level > level)
+                    level = tmp->player->level;
         }
+        // printf("Highest level attained: lvl %d\n", level);
     }
     close(this->control_socket);
     free(this->timeout);

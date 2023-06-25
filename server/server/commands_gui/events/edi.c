@@ -20,5 +20,11 @@ void send_edi_to_gui(this_t *this, char *uuid)
 
 void edi(this_t *this, player_t *player, char *uuid)
 {
-    dprintf(player->socket, "{\n\t\"cmd\": \"edi\",\n\t\"id\": \"%s\"\n}\n", uuid);
+    char *response = malloc(sizeof(char) * 4096);
+    response[0] = '\0';
+    response = my_strcat(response, "{\n\t\"cmd\": \"edi\",\n\t\"id\": \"");
+    response = my_strcat(response, uuid);
+    response = my_strcat(response, "\"\n}\n");
+    send(player->socket, response, strlen(response), 0);
+    // dprintf(player->socket, "{\n\t\"cmd\": \"edi\",\n\t\"id\": \"%s\"\n}\n", uuid);
 }

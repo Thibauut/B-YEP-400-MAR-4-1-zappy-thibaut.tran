@@ -43,8 +43,7 @@ int exec_ai_commands(this_t *this, player_t *player, int exec)
             return 0;
         }
     }
-    if (this->cmd[0] != NULL || this->cmd[1] != NULL && exec == EXECUTE)
-        printf("AI: %s %s\n", this->cmd[0], this->cmd[1]);
+
     if (player->in_team == true && (player->incantation == false) && player->is_gui == false) {
         if (move_commands(this, player, exec) == 0)
             return 0;

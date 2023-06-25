@@ -20,5 +20,11 @@ void send_ebo_to_gui(this_t *this, char *uuid)
 
 void ebo(this_t *this, player_t *player, char *uuid)
 {
-    dprintf(player->socket, "{\n\t\"cmd\": \"ebo\",\n\t\"id\": \"%s\"\n}\n", uuid);
+    char *response = malloc(sizeof(char) * 4096);
+    response[0] = '\0';
+    response = my_strcat(response, "{\n\t\"cmd\": \"ebo\",\n\t\"id\": \"");
+    response = my_strcat(response, uuid);
+    response = my_strcat(response, "\"\n}\n");
+    send(player->socket, response, strlen(response), 0);
+    // dprintf(player->socket, "{\n\t\"cmd\": \"ebo\",\n\t\"id\": \"%s\"\n}\n", uuid);
 }
