@@ -29,7 +29,7 @@ class Client {
         void sendRequest(const std::string& commande);
         void sendRequestId(const std::string& commande, std::string value);
 
-        void parseResponse(const std::string& response);
+        void parseResponse(const std::string response);
         // bool catchResponseExec();
         std::string catchResponse();
         std::string catchResponseAnexe();

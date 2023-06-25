@@ -8,6 +8,9 @@
 #include "Tile.hpp"
 #include <iostream>
 
+std::mutex mutex;
+
+
 Tile::Tile()
 {
 }
@@ -16,8 +19,8 @@ Tile::Tile(Vector2 position, std::vector<AItem*> items, int currentTile)
 {
     _position = position;
     _items = items;
-    int rand = std::rand() % 3 + 1;
-    std::string path = "gui/assets/ground/grass" + std::to_string(rand) + ".png";
+    int rand = std::rand() % 2 + 1;
+    std::string path = "gui/assets/ground/dirt" + std::to_string(rand) + ".png";
     _texture = LoadTexture(path.c_str());
     _isHovered = false;
     _currentTile = currentTile;
@@ -44,8 +47,9 @@ void Tile::drawTile(int startX, int startY, int spriteSpacingX, int spriteSpacin
     // drawTiles(renderIndex);
 }
 
-void Tile::CheckTileHover(BoxInfo &boxInfo, Camera2D camera)
+bool Tile::CheckTileHover(BoxInfo &boxInfo, BoxPlayer &boxPlayer, Camera2D camera)
 {
+    std::unique_lock<std::mutex> lock(mutex);
     Vector2 mouse = GetMousePosition();
     mouse.x /= camera.zoom;
     mouse.y /= camera.zoom;
@@ -63,16 +67,18 @@ void Tile::CheckTileHover(BoxInfo &boxInfo, Camera2D camera)
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             if (_items.size() == 0) {
                 isDrawingBox = false;
-                return;
+                return _isHovered;
             }
             isDrawingBox = true;
             boxInfo.setItems(_items);
         }
     }
+    return _isHovered;
 }
 
 void Tile::drawTiles(int renderIndex)
 {
+    std::unique_lock<std::mutex> lock(mutex);
     for (auto &item : _items) {
         Vector2 pos;
         pos.x = (screenWidth / 2) + (renderIndex % (width_map)) * (60 / 2) - (renderIndex / (width_map)) * (60 / 2);
@@ -87,6 +93,7 @@ void Tile::drawTiles(int renderIndex)
 
 void Tile::removeItem(int item)
 {
+    std::unique_lock<std::mutex> lock(mutex);
     for (size_t i = 0; i < _items.size(); i++) {
         if (_items.at(i)->getId() == item) {
             _items.erase(_items.begin() + i);
@@ -107,6 +114,7 @@ void Tile::setTilePosition(Vector2 position)
 
 void Tile::setTileItems(std::vector<AItem *> items)
 {
+    std::unique_lock<std::mutex> lock(mutex);
     _items = items;
 }
 
@@ -115,7 +123,8 @@ Vector2 Tile::getTilePosition() const
     return _position;
 }
 
-std::vector<AItem *> Tile::getTileItems() const
+std::vector<AItem *> Tile::getTileItems()
 {
+    std::unique_lock<std::mutex> lock(mutex);
     return _items;
 }

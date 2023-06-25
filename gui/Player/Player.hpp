@@ -10,6 +10,7 @@
 #include <raylib.h>
 #include "../Utils/Global.hpp"
 #include "../Anim/Anim.hpp"
+#include "../items/AItem.hpp"
 
 class Player {
     public:
@@ -36,10 +37,12 @@ class Player {
 
         Rectangle getAnim() const;
 
-        // void setInventory(std::vector<AItem>);
-        // std::vector<AItem> getInventory() const;
+        void setInventory(std::vector<AItem *>);
+        std::vector<AItem *> getInventory() const;
 
         void draw(Texture texture, Texture2D incantation);
+        void drawAtPosition(Texture2D texture);
+
 
     private:
         std::string _id;
@@ -52,5 +55,5 @@ class Player {
 
         bool _isIncanting;
         Anim _incantation;
-        // std::vector<AItem> _inventory;
+        std::vector<AItem *> _inventory;
 };

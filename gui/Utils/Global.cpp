@@ -15,3 +15,4 @@ const int screenWidth = 1920;
 const int screenHeight = 1080;
 bool canHover = true;
 bool isDrawingBox = false;
+bool isDrawingBoxPlayer = false;

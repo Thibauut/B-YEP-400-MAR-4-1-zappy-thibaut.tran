@@ -6,8 +6,7 @@
 */
 
 #pragma once
-#include "../Utils/Global.hpp"
-#include "../items/AItem.hpp"
+#include "BoxPlayer.hpp"
 
 class BoxInfo {
     public:
@@ -19,5 +18,7 @@ class BoxInfo {
 
     private:
         Texture2D _box;
+        Vector2 _position;
         std::vector<AItem *> _items;
+        Font _font;
 };

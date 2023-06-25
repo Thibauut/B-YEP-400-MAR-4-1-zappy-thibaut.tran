@@ -23,4 +23,6 @@ extern const int screenWidth;
 extern const int screenHeight;
 extern bool canHover;
 extern bool isDrawingBox;
+extern bool isDrawingBoxPlayer;
+
 

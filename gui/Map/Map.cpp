@@ -18,7 +18,7 @@ Map::~Map()
 
 void Map::drawMap()
 {
-    std::lock_guard<std::mutex> lock(_mutex);
+    std::unique_lock<std::mutex> lock(_mutex);
     int startX = screenWidth / 2;
     int startY = 0;
     int spriteSpacingX = 60 / 2;
@@ -51,6 +51,6 @@ void Map::setMap(std::vector<Tile> map)
 
 void Map::push(Tile tile)
 {
-    std::lock_guard<std::mutex> lock(_mutex);
+    std::unique_lock<std::mutex> lock(_mutex);
     _map.push_back(tile);
 }

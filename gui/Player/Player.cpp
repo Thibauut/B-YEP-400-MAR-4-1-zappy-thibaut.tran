@@ -41,6 +41,16 @@ std::string Player::getName() const
     return _id;
 }
 
+void Player::setInventory(std::vector<AItem *> inventory)
+{
+    _inventory = inventory;
+}
+
+std::vector<AItem *> Player::getInventory() const
+{
+    return _inventory;
+}
+
 void Player::setPosition(Vector2 pos)
 {
     _pos = pos;
@@ -69,7 +79,7 @@ int Player::getOrientation() const
 
 void Player::setLevel(int level)
 {
-    _anim.y = 220 - (((level - 1) * 22) * 4);
+    _anim.y = 660 - (((level - 1) * 22) * 4);
     _level = level;
 }
 
@@ -115,4 +125,32 @@ void Player::draw(Texture2D texture, Texture2D incantation)
     // std::cout << "settings.y " << _settings.y;
     // std::cout << " settings.x " << _settings.x << std::endl;
     DrawTexturePro(texture, _anim, _settings, (Vector2) {0, 0}, 0, WHITE);
+}
+
+void Player::drawAtPosition(Texture2D texture)
+{
+    if (_orientation == 0) {
+        _anim.x = (16 * 5);
+    }
+    if (_orientation == 1) {
+        _anim.x = (16 * 3);
+    }
+    if (_orientation == 2) {
+        _anim.x = 16;
+    }
+    if (_orientation == 3) {
+        _anim.x = (16 * 7);
+    }
+    // if (_isIncanting == true) {
+    //     _incantation.update();
+    //     _incantation.draw(incantation);
+    // }
+    // std::cout << "settings.y " << _settings.y;
+    // std::cout << " settings.x " << _settings.x << std::endl;
+    Rectangle tmpSettings = _settings;
+    tmpSettings.x = 1520;
+    tmpSettings.y = 900;
+    tmpSettings.width *= 2;
+    tmpSettings.height *= 2;
+    DrawTexturePro(texture, _anim, tmpSettings, (Vector2) {0, 0}, 0, WHITE);
 }

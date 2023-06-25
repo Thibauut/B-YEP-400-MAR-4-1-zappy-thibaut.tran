@@ -17,13 +17,14 @@ ActionQueue::~ActionQueue()
 
 void ActionQueue::push(std::string action)
 {
-    std::lock_guard<std::mutex> lock(_mutex);
+    std::unique_lock<std::mutex> lock(_mutex);
+    std::cout << "PUSH: " << action << "END" << std::endl;
     _queue.push_back(action);
 }
 
 std::string ActionQueue::pop()
 {
-    std::lock_guard<std::mutex> lock(_mutex);
+    std::unique_lock<std::mutex> lock(_mutex);
     std::string action = _queue.at(0);
     _queue.erase(_queue.begin());
     return action;
@@ -31,12 +32,12 @@ std::string ActionQueue::pop()
 
 bool ActionQueue::isEmpty()
 {
-    std::lock_guard<std::mutex> lock(_mutex);
+    std::unique_lock<std::mutex> lock(_mutex);
     return _queue.empty();
 }
 
 std::vector<std::string> ActionQueue::getQueue()
 {
-    std::lock_guard<std::mutex> lock(_mutex);
+    std::unique_lock<std::mutex> lock(_mutex);
     return _queue;
 }

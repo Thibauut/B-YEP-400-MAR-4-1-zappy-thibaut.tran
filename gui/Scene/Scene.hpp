@@ -22,10 +22,14 @@ class Scene {
         void removePlayer(int pos);
         void drawPlayers(Texture2D model, Texture2D incantation);
         void setPositionPlayer(std::string id, Vector2 position);
+        std::vector<AItem *> getInventoryPlayer(std::string id);
+        void setInventoryPlayer(std::string id, std::vector<AItem *> inventory);
         void setOrientationPlayer(std::string id, int orientation);
         void setLevelPlayer(std::string id, int level);
         void isIncantingPlayer(std::string id, bool isIncanting);
-        int getPlayerById(std::string id) const;
+        std::string isPlayerAtPosition(Vector2 position);
+        int getPlayerById(std::string id);
+        std::string getPlayerName(size_t pos);
 
         std::vector<Egg> getEggs();
         void setEggs(std::vector<Egg> eggs);
@@ -33,7 +37,7 @@ class Scene {
         void removeEgg(int eggPos);
         void drawEggs(Texture2D model);
         void setPositionEgg(std::string id, Vector2 position);
-        int getEggById(std::string id) const;
+        int getEggById(std::string id);
 
         void setBase(Texture2D base);
         Texture2D getBase() const;

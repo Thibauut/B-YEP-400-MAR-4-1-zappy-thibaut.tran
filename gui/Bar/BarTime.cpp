@@ -33,14 +33,21 @@ void Bar::init(Vector2 position)
     _value = 2;
     _fill = LoadTexture("gui/assets/slider/fill.png");
     _fillRec = (Rectangle) { 0.0f, 100.0f, 0.0f, 33.0f };
+    _textValue = LoadFont("gui/assets/fonts/font1.ttf");
 }
 
 void Bar::draw()
 {
-    DrawTextureEx(_background, _backgroundPosition, 0, 0.15f, WHITE);
-    DrawTextureRec(_fill, _fillRec, _fillPosition, WHITE);
-    DrawTextureEx(_cadre, _cadrePosition, 0, 0.15f, WHITE);
-    DrawTextureEx(_pointer, _pointerPosition, 0, 0.15f, WHITE);
+    if (_show) {
+        DrawTextureEx(_background, _backgroundPosition, 0, 0.15f, WHITE);
+        DrawTextureRec(_fill, _fillRec, _fillPosition, WHITE);
+        DrawTextureEx(_cadre, _cadrePosition, 0, 0.15f, WHITE);
+        DrawTextureEx(_pointer, _pointerPosition, 0, 0.15f, WHITE);
+        Vector2 tmpPos = _pointerPosition;
+        tmpPos.x += 8;
+        tmpPos.y += 15;
+        DrawTextEx(_textValue, TextFormat("%d", _value), tmpPos, 20, 10, WHITE);
+    }
 }
 
 void Bar::setValue(int value)
@@ -55,22 +62,34 @@ bool Bar::isEnabled()
 
 void Bar::checkMouseClick()
 {
-    float posMouse = GetMousePosition().x - ((262 * 0.15f) / 2);
-    float yMouse = GetMousePosition().y - ((262 * 0.15f) / 2);
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        if (posMouse >= (_startX + 4) && posMouse <= _startX + 200 && yMouse >= (_pointerPosition.y) && yMouse <= (_pointerPosition.y + (262 * 0.15f))) {
-            _enabled = true;
+    if (_show) {
+        float posMouse = GetMousePosition().x - ((262 * 0.15f) / 2);
+        float yMouse = GetMousePosition().y - ((262 * 0.15f) / 2);
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            if (posMouse >= (_startX + 4) && posMouse <= _startX + 200 && yMouse >= (_pointerPosition.y) && yMouse <= (_pointerPosition.y + (262 * 0.15f))) {
+                _enabled = true;
+            }
         }
-    }
-    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
-        _enabled = false;
-    }
+        if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+            _enabled = false;
+        }
 
-    if (_enabled == true) {
-        if (posMouse >= (_startX + 4) && posMouse <= _startX + 200) {
-            _fillRec.width = (posMouse - _startX) + ((262 * 0.15f) / 2);
-            _pointerPosition.x = posMouse;
-            _value = ((posMouse - _startX) / 2);
+        if (_enabled == true) {
+            if (posMouse >= (_startX + 4) && posMouse <= _startX + 200) {
+                _fillRec.width = (posMouse - _startX) + ((262 * 0.15f) / 2);
+                _pointerPosition.x = posMouse;
+                _value = ((posMouse - _startX) / 2);
+            }
         }
     }
+}
+
+void Bar::show()
+{
+    _show = true;
+}
+
+void Bar::hide()
+{
+    _show = false;
 }

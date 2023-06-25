@@ -9,6 +9,7 @@
 
 #include "../items/AItem.hpp"
 #include "../screens/BoxInfo.hpp"
+#include <mutex>
 
 class Tile {
     public:
@@ -22,11 +23,11 @@ class Tile {
         // Setters
         void setTilePosition(Vector2 position);
         void setTileItems(std::vector<AItem*> items);
-        void CheckTileHover(BoxInfo& boxInfo, Camera2D camera);
+        bool CheckTileHover(BoxInfo& boxInfo, BoxPlayer& boxPlayer, Camera2D camera);
 
         // Getters
         Vector2 getTilePosition() const;
-        std::vector<AItem*> getTileItems() const;
+        std::vector<AItem*> getTileItems();
         void setTexture(Texture2D &texture);
 
         void removeItem(int item);

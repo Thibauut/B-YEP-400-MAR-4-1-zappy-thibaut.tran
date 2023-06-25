@@ -19,6 +19,8 @@ class Bar {
         void setValue(int time);
         void checkMouseClick();
         bool isEnabled();
+        void show();
+        void hide();
 
         int _tmpTime;
         int _value;
@@ -37,4 +39,7 @@ class Bar {
         Vector2 _fillPosition;
         Texture2D _fill;
         Rectangle _fillRec;
+        bool _show;
+
+        Font _textValue;
 };

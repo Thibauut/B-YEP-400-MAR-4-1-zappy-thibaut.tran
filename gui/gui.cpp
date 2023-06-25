@@ -16,6 +16,7 @@
 #include <mutex>
 #include "Anim/AnimRaylib.hpp"
 #include "Map/Cursor.hpp"
+#include "Anim/Dropdown.hpp"
 
 #include <atomic>
 
@@ -25,6 +26,7 @@ atomic<bool> dataLoaded = false;
 void LoadDataThread();
 atomic<int> dataProgress = 0;
 
+BoxPlayer boxPlayer;
 Map myMap;
 Scene scene;
 bool verifLoad = false;
@@ -35,9 +37,8 @@ Camera2D camera = { 0 };
 
 using json = nlohmann::json;
 
-Tile parseResponse(json parsedData, int x, int y, int count)
+std::vector<AItem *> parseItems(json parsedData, Vector2 position)
 {
-    Vector2 position = {(float)x, (float)y};
     std::vector<AItem*> items;
     for (int i = 0; i < (int)parsedData["food"]; i++)
             items.push_back(new Food(position));
@@ -53,12 +54,24 @@ Tile parseResponse(json parsedData, int x, int y, int count)
             items.push_back(new Phiras(position));
     for (int i = 0; i < (int)parsedData["thystame"]; i++)
             items.push_back(new Thystame(position));
+    return items;
+}
+
+Tile parseResponse(json parsedData, int x, int y, int count)
+{
+    std::vector<AItem *> items;
+    Vector2 position = {(float)x, (float)y};
+    items = parseItems(parsedData, position);
     return Tile(position, items, count);
 }
 
 void parseAction(json data)
 {
     std::string cmd = data["cmd"];
+    if (cmd == "pin") {
+        std::string id = data["id"];
+        scene.setInventoryPlayer(id, parseItems(data, (Vector2) {0, 0}));
+    }
     if (cmd == "pgt") {
         std::string id = data["id"];
         int player = scene.getPlayerById(id);
@@ -102,6 +115,8 @@ void parseAction(json data)
     }
     if (cmd == "pdi") {
         std::string id = data["id"];
+        if (id == boxPlayer.getIdPlayer())
+            boxPlayer.hide();
         int player = scene.getPlayerById(id);
         scene.removePlayer(player);
     }
@@ -136,6 +151,8 @@ void parseAction(json data)
     }
     if (cmd == "ebo") {
         std::string eggId = data["id"];
+        // int eggPos = scene.getEggById(eggId);
+        // scene.removeEgg(eggPos);
     }
     if (cmd == "pnw") {
         std::string id = data["id"];
@@ -154,73 +171,45 @@ void parseAction(json data)
 void makeAction()
 {
     std::string command;
+    std::string cmd;
     while (1) {
         if (!client._actionQueue.isEmpty()) {
             command = client._actionQueue.pop();
-            std::cout << "ACTION: " << command << std::endl;
-            if (command != "ko\n" && command != "ko" && command.c_str()[0] != 'k' && command.c_str()[1] != 'o' && command.c_str()[0] == '{')
+            if (command != "ko\n" && command != "ko" && command.c_str()[0] != 'k' && command.c_str()[1] != 'o') {
+                std::cout << "PARSER: " << command << "ENDPARSER" << std::endl;
                 parseAction(json::parse(command));
+            } else {
+                // std::cout << "ERROR: " << command << "END" << std::endl;
+            }
         }
     }
 }
 
 void refreshInfo()
 {
-    // Client client(ip, port);
+    std::chrono::time_point<std::chrono::system_clock> start, end;
     std::string response;
     while (1) {
         response = client.catchResponse();
+        // std::this_thread::sleep_for(std::chrono::milliseconds(200));
         for (size_t i = 0; i < scene.getPlayers().size(); i++) {
-            client.sendRequestId("ppo", scene.getPlayers().at(i).getName());
-            response = client.catchResponse();
-            client.sendRequestId("plv", scene.getPlayers().at(i).getName());
-            response = client.catchResponse();
+            std::string name = scene.getPlayerName(i);
+            if (name != "") {
+                client.sendRequestId("ppo", name);
+                response = client.catchResponse();
+                client.sendRequestId("plv", name);
+                response = client.catchResponse();
+                // client.sendRequestId("pin", name);
+                // response = client.catchResponse();
+            }
         }
         if (timeBar._tmpTime != timeBar._value) {
             timeBar._tmpTime = timeBar._value;
             std::string message = "sst " + std::to_string(timeBar._value) + "\n";
             client.sendRequest(message);
         }
-        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }
-
-void createMap(LoadingState &state)
-{
-    // LoadingState *state = (LoadingState *) arg;
-    state.progress = 0;
-    state.loaded = false;
-    // std::string response = client.catchResponse();
-    // for (int i = 1; i < width_map; i++) {
-    //     for (int j = 1; j < height_map; j++) {
-    //         std::string request = "bct ";
-    //         request = request + std::to_string(i) + " " + std::to_string(j) + "\n";
-    //         client.sendRequest(request);
-    //         std::cout << "Send " << request << " command to server..." << std::endl;
-    //         response = client.catchResponse();
-    //         std::cout << response << std::endl;
-    //         json parsedData = json::parse(response);
-    //         std::cout << "x: " << parsedData["x"] << ", y: " << parsedData["y"] << std::endl;
-
-    //         int x = int(parsedData["x"]);
-    //         int y = int(parsedData["y"]);
-    //         Tile tile = parseResponse(parsedData, x, y);
-
-    //         myMap.push(tile);
-    //         count += 1;
-    //         state.progress = ((width_map - 1) * (height_map - 1));
-    //         state.progress = count / state.progress * 100;
-    //     }
-    // }
-    // myMap.setMap(map._map);
-    state.loaded = true;
-    dataLoaded = true;
-    pthread_exit(NULL);
-}
-
-// float cameraX = 0.0f;  // Position de la caméra sur l'axe X
-// float cameraY = 3.0f;  // Position de la caméra sur l'axe Y
-// float cameraZ = 0.0f;  // Position de la caméra sur l'axe Z
 
 void checkArguments(int argc, char** argv) {
     if (argc != 3) {
@@ -235,7 +224,7 @@ int main(int argc, char **argv) {
     checkArguments(argc, argv);
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
     client.init(ip, port);
-    sleep(1);
+    sleep(0.1);
     std::string response;
     // response = client.catchResponse();
     client.sendRequest("msz\n");
@@ -247,11 +236,9 @@ int main(int argc, char **argv) {
     std::cout << "Response: " << response << std::endl;
     std::cout << "x: " << width_map << ", y: " << height_map << std::endl;
     InitWindow(screenWidth, screenHeight, "Zappy");
-    timeBar.init((Vector2) {1600, 50});
+    timeBar.init((Vector2) {1650, 100});
     Bar zoomBar;
     zoomBar.init((Vector2) {1600, 100});
-    // LoadingState loadingState = { 0, false, &client, myMap };
-    // std::thread loadingThread(createMap, std::ref(loadingState));
 
     PlayerState playerState;
     playerState.client = &client;
@@ -284,7 +271,7 @@ int main(int argc, char **argv) {
     // loadingState.map = myMap;
     // pthread_t loadingThread;
     std::cout << "width_MAP: " << width_map << ", height_MAP: " << height_map << std::endl;
-    sleep(0.5);
+    sleep(0.1);
     std::string request = "bct ";
     std::string finalRequest;
     int count = 0;
@@ -298,23 +285,27 @@ int main(int argc, char **argv) {
             int x = int(parsedData["x"]);
             int y = int(parsedData["y"]);
             // int count = (y * width_map) + x;
-            Tile tile = parseResponse(parsedData, x, y, count);
+            Tile tile(parseResponse(parsedData, x, y, count));
             count++;
             myMap.push(tile);
         }
-        sleep(0.5);
+        sleep(0.1);
     }
-
+    sleep(3);
     Texture2D basePlayer = LoadTexture("gui/assets/player/players.png");
     Texture2D baseIncantation = LoadTexture("gui/assets/player/incantation.png");
     Texture2D baseEgg = LoadTexture("gui/assets/player/egg.png");
+    Texture2D dropDown = LoadTexture("gui/assets/ui/dropdownButton.png");
 
     Cursor cursor;
+    DropdownMenu dropdownMenu({ 1600, 50 }, { 320, 1750 }, BROWN);
 
     std::thread checkingThread(makeAction);
     std::thread refreshThread(refreshInfo);
+
     SetTargetFPS(60);
     BoxInfo boxInfo;
+    boxPlayer.init();
     // AnimRaylib anim;
     // anim.run();
 
@@ -363,11 +354,26 @@ int main(int argc, char **argv) {
             } break;
             case STATE_FINISHED:
             {
+                std::string id = "";
+                std::string tmp = "";
+                bool check = false;
                 for (auto &tile: myMap._map) {
-                    tile.CheckTileHover(boxInfo, camera);
+                    check = tile.CheckTileHover(boxInfo, boxPlayer, camera);
+                    if (check == true) {
+                        tmp = scene.isPlayerAtPosition(tile.getTilePosition());
+                        if (tmp != "" && id == "") {
+                            id = tmp;
+                        }
+                    }
+                }
+                if (id != "") {
+                    boxPlayer.setItems(scene.getInventoryPlayer(id));
+                    boxPlayer.setIdPlayer(id);
+                    boxPlayer.show();
+                } else {
+                    boxPlayer.hide();
                 }
                 timeBar.checkMouseClick();
-                zoomBar.checkMouseClick();
                 cursor.update(timeBar, zoomBar);
                 // camera.zoom = zoomBar._value * 0.1f;
                 int scroll = GetMouseWheelMove();
@@ -377,6 +383,11 @@ int main(int argc, char **argv) {
                     else
                         camera.zoom -= 0.1f;
                 }
+                bool check2 = dropdownMenu.update();
+                if (check2 == true)
+                    timeBar.show();
+                else
+                    timeBar.hide();
             } break;
             default: break;
         }
@@ -419,12 +430,17 @@ int main(int argc, char **argv) {
                 EndMode2D();
                 if (isDrawingBox) {
                     boxInfo.draw();
+                    if (boxPlayer.isShowing()) {
+                        Player player;
+                        int posPlayer = scene.getPlayerById(boxPlayer.getIdPlayer());
+                        boxPlayer.draw(scene.getPlayers().at(posPlayer), basePlayer);
+                    }
                 }
                 for (size_t i = 0; i < scene.getPlayers().size(); i++) {
                     DrawText(scene.getPlayers().at(i).getName().c_str(), 10, 10 + 20 * i, 20, GREEN);
                 }
+                dropdownMenu.draw(dropDown);
                 timeBar.draw();
-                zoomBar.draw();
                 cursor.draw(&camera);
             } break;
             default: break;
