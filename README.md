@@ -66,4 +66,4 @@ In progress...
 - [Thibaut Tran](https://github.com/Thibauut)
 - [Noah Yekken](https://github.com/)
 - [Alexandre Vassal](https://github.com/)
-- [Zyad Othman](https://github.com/)
+- [Zyad Othman](https://github.com/ZyadOthman)
