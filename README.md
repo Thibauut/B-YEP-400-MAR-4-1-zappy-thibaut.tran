@@ -2,14 +2,14 @@
 Zappy is an autonomous game powered by AI. It's the end-of-second-year project at Epitech. The goal of this project is to create a network game where several teams confront on a tiles map containing resources.
 The winning team is the first one where at least 6 players who reach the maximum elevation.
 
-## Requirements
+# Requirements
 
 - gui (C++)
 - server (C)
 - ai (free)
 
 
-## Project
+# Project
 ### Server
 The server is the key of the game, which contains the state of the game and the state of the players. It also send and receive messages from the clients.
 
@@ -21,7 +21,7 @@ The world is in 3D for a better experience.
 We choose C++ for AI langage;
 They have different levels.
 
-## Build
+# Build
 
 ```
 make gui_
@@ -35,8 +35,8 @@ make clean
 make fclean
 ```
 
-## Usage
-```bash
+# Usage
+```
 USAGE:
     ./zappy_gui -p port -h machine
         port is the port number
@@ -56,9 +56,6 @@ USAGE:
         machine is the name of the machine; localhost by default
 
 ```
-
-## Documentation
-In progress...
 
 ## Contributors
 
