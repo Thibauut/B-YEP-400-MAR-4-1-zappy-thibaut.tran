@@ -22,7 +22,9 @@ The world is in 3D for a better experience.
 ### AI
 ```
 We choosed Python for AI langage;
-They have different levels.
+They start from nothing and have different items on the map like food or materials to survive and level up.
+By using broadcast they can help each others (from the same team) to reproduce themselves or leveling up.
+The first team of AI to be level 8 (max level) has won the simulation.
 ```
 
 # Build
