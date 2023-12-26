@@ -11,15 +11,19 @@ The winning team is the first one where at least 6 players who reach the maximum
 
 # Project
 ### Server
+```
 The server is the key of the game, which contains the state of the game and the state of the players. It also send and receive messages from the clients.
-
+```
 ### GUI
+```
 The gui is a client of the server. He asks the server about information of the game to display it.
 The world is in 3D for a better experience.
-
+```
 ### AI
-We choose C++ for AI langage;
+```
+We choosed Python for AI langage;
 They have different levels.
+```
 
 # Build
 
